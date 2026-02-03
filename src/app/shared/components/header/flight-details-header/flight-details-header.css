@@ -1,23 +1,20 @@
-
 .flight-header {
- 
-  --pad-x: 15px; 
-  --gap-col: 16px; 
-  --gap-right-col: 24px; 
+  --pad-x: 15px;
+  --gap-col: 16px;
+  --gap-right-col: 24px;
 
+  --right-icao: 60px;
+  --right-min: 120px;
+  --right-max: 160px;
+  --std-label: 40px;
 
-  --right-icao: 60px; 
-  --right-min: 120px; 
-  --right-max: 160px; 
-  --std-label: 40px; 
-
-  --left-cell-min: 200px; 
+  --left-cell-min: 200px;
 
   font-family: Arial, Helvetica, sans-serif;
   font-size: 14px;
   background-color: #fff;
   border-bottom: 2px solid #0b2341;
-  isolation: isolate; 
+  isolation: isolate;
 }
 .flight-header * {
   box-sizing: border-box;
@@ -42,34 +39,32 @@
   letter-spacing: 0.5px;
 }
 
-
 .flight-header-viewport {
   width: 100%;
-  overflow-x: hidden; 
+  overflow-x: hidden;
   overflow-y: hidden;
   background: #fff;
 }
 
 .flight-header .top-row {
-  display: grid !important; 
+  display: grid !important;
   grid-template-columns: max-content max-content;
   column-gap: var(--gap-col);
   align-items: start;
   padding: 10px var(--pad-x);
-  white-space: nowrap; 
-  width: max-content; 
+  white-space: nowrap;
+  width: max-content;
   min-width: 100%;
 }
-
 
 .flight-header .left-section {
   display: grid !important;
   grid-template-columns: repeat(3, minmax(var(--left-cell-min), max-content));
   grid-auto-rows: min-content;
- 
+
   column-gap: 0;
-  min-width: max-content; 
-  overflow: clip; 
+  min-width: max-content;
+  overflow: clip;
 }
 
 .flight-header .item {
@@ -79,13 +74,12 @@
 }
 .flight-header .item .label {
   font-weight: bold;
-  margin-right: 6px !important; 
+  margin-right: 6px !important;
   min-width: 70px;
 }
 .flight-header .item .value {
   white-space: nowrap;
 }
-
 
 .flight-header .right-section {
   display: grid !important;
@@ -97,8 +91,8 @@
   justify-items: start;
   white-space: nowrap;
 
-  min-width: max-content; 
-  overflow: clip; 
+  min-width: max-content;
+  overflow: clip;
   background: #fff;
   position: relative;
   z-index: 1;
@@ -118,14 +112,13 @@
   white-space: nowrap;
 }
 
-
 .flight-header .right-section.single {
   grid-template-columns:
-    var(--right-icao) 
-    minmax(var(--right-min), var(--right-max)) 
-    var(--right-icao) 
-    minmax(var(--right-min), var(--right-max)) 
-    1fr; 
+    var(--right-icao)
+    minmax(var(--right-min), var(--right-max))
+    var(--right-icao)
+    minmax(var(--right-min), var(--right-max))
+    1fr;
 }
 
 .flight-header .right-section.single .icao.org {
@@ -135,7 +128,7 @@
 .flight-header .right-section.single .std {
   grid-column: 2;
   grid-row: 1;
-} 
+}
 .flight-header .right-section.single .icao.dst {
   grid-column: 3;
   grid-row: 1;
@@ -147,17 +140,16 @@
 .flight-header .right-section.single .etd {
   grid-column: 2;
   grid-row: 2;
-} 
-
+}
 
 .flight-header .right-section.multi {
   grid-template-columns:
     var(--right-icao)
-    minmax(var(--right-min), var(--right-max)) 
-    var(--right-icao) 
-    minmax(var(--right-min), var(--right-max)) 
     minmax(var(--right-min), var(--right-max))
-    64px; 
+    var(--right-icao)
+    minmax(var(--right-min), var(--right-max))
+    minmax(var(--right-min), var(--right-max))
+    64px;
 }
 
 .flight-header .right-section.multi .icao.org {
@@ -202,7 +194,6 @@
   cursor: pointer;
 }
 
-
 .flight-header .bottom-row {
   display: flex;
   flex-wrap: nowrap;
@@ -230,40 +221,36 @@
   text-align: right;
 }
 
-
-
 @media (min-width: 1200px) {
   .flight-header-viewport {
     overflow-x: hidden;
   }
-.labelb{
-  margin-left:60% !important;
-}
-.labelc{
-  margin-left:113% !important
-}
-.valb{
-  margin-left:50%;
-}
-.valc{
-  margin-left:67%;
-}
-.labelm{
-  margin-left:96% !important
-} 
-.groupo{
-  margin-left:125px;
-}
-.valm{
-  margin-left:55px;
-}
+  .labelb {
+    margin-left: 60% !important;
+  }
+  .labelc {
+    margin-left: 113% !important;
+  }
+  .valb {
+    margin-left: 50%;
+  }
+  .valc {
+    margin-left: 67%;
+  }
+  .labelm {
+    margin-left: 96% !important;
+  }
+  .groupo {
+    margin-left: 125px;
+  }
+  .valm {
+    margin-left: 55px;
+  }
 
-.valo{
-  margin-left:80px;
-}
+  .valo {
+    margin-left: 80px;
+  }
   .flight-header {
-   
-
     --gap-col: 225px;
     --right-icao: 22px !important;
     --right-min: 60px !important;
@@ -280,12 +267,12 @@
 
   .flight-header .bottom-row .group .label {
     margin-right: 5px !important;
-    font-size:12px;
-  margin-top:3px;
+    font-size: 12px;
+    margin-top: 3px;
   }
   .flight-header .bottom-row .group .valv {
     margin-right: 15% !important;
-   margin-left:50%;
+    margin-left: 50%;
   }
   .flight-header .bottom-row {
     display: flex;
@@ -303,51 +290,50 @@
   .flight-header .val {
     margin-left: 15px;
     margin-top: 2px;
-}
-.flight-header .item .label{
-  font-weight: bold;
-  margin-right: 6px !important;
-  min-width: 60px;
-}
- 
+  }
+  .flight-header .item .label {
+    font-weight: bold;
+    margin-right: 6px !important;
+    min-width: 60px;
+  }
 }
 
 @media (min-width: 1500px) {
   .flight-header-viewport {
     overflow-x: hidden;
   }
-  .labelb{
-    margin-left:10% !important;
+  .labelb {
+    margin-left: 10% !important;
   }
-  .labelc{
-    margin-left:70% !important
+  .labelc {
+    margin-left: 70% !important;
   }
-  .labelm{
-    margin-left:88% !important
-  } 
-  .groupo{
-    margin-left:135px;
+  .labelm {
+    margin-left: 88% !important;
   }
-  .valm{
-    margin-left:65px;
+  .groupo {
+    margin-left: 135px;
   }
-  .valb{
-    margin-left:62%;
+  .valm {
+    margin-left: 65px;
   }
-  .valc{
-    margin-left:80%;
+  .valb {
+    margin-left: 62%;
   }
-  .valo{
-    margin-left:80px;
+  .valc {
+    margin-left: 80%;
+  }
+  .valo {
+    margin-left: 80px;
   }
   .flight-header .bottom-row .group .label {
     margin-right: 5px !important;
-    font-size:16px;
-  margin-top:3px;
+    font-size: 16px;
+    margin-top: 3px;
   }
   .flight-header .bottom-row .group .valv {
     margin-right: 15% !important;
-   margin-left:15%;
+    margin-left: 15%;
   }
   .flight-header .bottom-row {
     display: flex;
@@ -365,16 +351,16 @@
   .flight-header .val {
     margin-left: 8px;
     margin-top: 2px;
-}
-.flight-header .item .label{
-  font-weight: bold;
-  margin-right: 6px !important;
-  min-width: 60px;
-}
+  }
+  .flight-header .item .label {
+    font-weight: bold;
+    margin-right: 6px !important;
+    min-width: 60px;
+  }
   .flight-header {
     --pad-x: 15px;
     --gap-col: 323px;
-    /* --gap-right-col: 24px; */
+   
     --right-icao: 60px !important;
     --right-min: 120px !important;
     --right-max: 125px !important;
@@ -387,7 +373,7 @@
     isolation: isolate;
   }
   .flight-header .item .values {
-    /* white-space: nowrap; */
+   
     margin-left: 12% !important;
   }
 
