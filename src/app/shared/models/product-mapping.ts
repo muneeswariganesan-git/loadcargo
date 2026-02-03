@@ -27,4 +27,11 @@ export const ProductCodeMap: Record<string, string> = {
     const normalized = (product || '').toLowerCase();
     return CommodityCodeMap[normalized] ?? []; 
   }
+
+
+  export let getCommodityCodesRef = getCommodityCodes;
+
+export function setGetCommodityCodesRef(mockFn: any) {
+  getCommodityCodesRef = mockFn;
+}
   

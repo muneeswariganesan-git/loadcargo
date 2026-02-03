@@ -127,7 +127,7 @@ export interface DelayExtra { DelayRequest: { includeDelayCodes: boolean; includ
 
 export interface ServiceExtras {
   viewInfo: ViewInfoExtra;
-  anomaly: FlightAnomalyRequest;
+ // anomaly: FlightAnomalyRequest;
   deadload: DeadloadExtra;
   viewOwnership: ViewOwnershipExtra;
   forecast: ForecastExtra;

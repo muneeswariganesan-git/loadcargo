@@ -28,26 +28,26 @@ export const serviceMappers: {
       FMLoadIndicator: true,
     },
   }),
-  anomaly: (base: FlightSearchPayload): FlightSearchPayload & FlightAnomalyRequest => ({
-    ...base,
+  // anomaly: (base: FlightSearchPayload): FlightSearchPayload & FlightAnomalyRequest => ({
+  //   ...base,
 
-    FlightAnomalyAndSystemDetails: {
-      DatedFlightLeg: {
-        FlightCode: {
-          FlightNumber: base.flightNumbers.join('/'),
-          CarrierCode: base.flightNumbers[0]?.slice(0, 2) ?? '',
-        },
-        Leg: {
-          OriginStation: base.departureStation,
-        },
-        DateTimes: {
-          DateTimeLocal: formatDate(base.flightDate), // e.g., "2025-12-01T00:00:00"
-          DateTimeStatus: 'Scheduled',
-          DateTimeType: 'Departure',
-        },
-      },
-    },
-  }),
+  //   FlightAnomalyAndSystemDetails: {
+  //     DatedFlightLeg: {
+  //       FlightCode: {
+  //         FlightNumber: base.flightNumbers.join('/'),
+  //         CarrierCode: base.flightNumbers[0]?.slice(0, 2) ?? '',
+  //       },
+  //       Leg: {
+  //         OriginStation: base.departureStation,
+  //       },
+  //       DateTimes: {
+  //         DateTimeLocal: formatDate(base.flightDate), // e.g., "2025-12-01T00:00:00"
+  //         DateTimeStatus: 'Scheduled',
+  //         DateTimeType: 'Departure',
+  //       },
+  //     },
+  //   },
+  // }),
 
   deadload: (base) => ({ ...base, DeadloadRequest: { weight: 1500, description: 'Cargo' } }),
   viewOwnership: (base) => ({
@@ -104,62 +104,45 @@ export function buildViewFlightSummaryRequest(
   };
 }
 
-export const buildFlightAnomalyPayload = (base: FlightSearchPayload): FlightAnomalyRequest => {
-  return {
-    FlightAnomalyAndSystemDetails: {
-      DatedFlightLeg: {
-        FlightCode: {
-          FlightNumber: base.flightNumbers?.[1] ?? '',
-          CarrierCode: base.flightNumbers?.[0]  ?? '',
-        },
-        Leg: {
-          OriginStation: base.departureStation,
-        },
-        DateTimes: {
-          DateTimeLocal: formatDate(base.flightDate), // e.g., "2025-12-01T00:00:00"
-          DateTimeStatus: 'Scheduled',
-          DateTimeType: 'Departure',
-        },
-      },
-    },
-  };
-};
-
-// return {
-//   ...base,
-//   DatedFlightLeg: {
-//     FlightCode: {
-//       FlightNumber: base.flightNumbers.join('/'),
-//       CarrierCode: base.flightNumbers[0]?.slice(0, 2) ?? '',
+// export const buildFlightAnomalyPayload = (base: FlightSearchPayload): FlightAnomalyRequest => {
+//   return {
+//     FlightAnomalyAndSystemDetails: {
+//       DatedFlightLeg: {
+//         FlightCode: {
+//           FlightNumber: base.flightNumbers?.[1] ?? '',
+//           CarrierCode: base.flightNumbers?.[0]  ?? '',
+//         },
+//         Leg: {
+//           OriginStation: base.departureStation,
+//         },
+//         DateTimes: {
+//           DateTimeLocal: formatDate(base.flightDate), // e.g., "2025-12-01T00:00:00"
+//           DateTimeStatus: 'Scheduled',
+//           DateTimeType: 'Departure',
+//         },
+//       },
 //     },
-//     Leg: {
-//       OriginStation: base.departureStation,
-//     },
-//     DateTimes: {
-//       DateTimeLocal: formatDate(base.flightDate),
-//       DateTimeStatus: 'Scheduled',
-//       DateTimeType: 'Departure',
-//     },
-//   },
+//   };
 // };
 
 
 
-// src/app/shared/forecast/forecast-mapper.ts
+
+
 export type ForecastItem = {
   LoadType: 'BLK' | 'ULD';
-  OffpointStation?: string;          // Dest
-  UnitType?: string;                 // e.g., AKE
-  SerialNumber?: string;             // e.g., 14102
-  OwnerCode?: string;                // e.g., BA
+  OffpointStation?: string;         
+  UnitType?: string;                 
+  SerialNumber?: string;          
+  OwnerCode?: string;               
   GrossWeight?: number;
   TareWeight?: number;
   Deadload?: {
-    CommodityCode?: string;          // 'C'
+    CommodityCode?: string;         
     NetWeight?: number;
     EstimatedIndicator?: 'Y' | 'N';
   };
-  Com?: string;                      // sometimes present
+  Com?: string;                      
 };
 
 export type ForecastRow = {
