@@ -28,6 +28,7 @@ export const serviceMappers: {
       FMLoadIndicator: true,
     },
   }),
+  //test
   // anomaly: (base: FlightSearchPayload): FlightSearchPayload & FlightAnomalyRequest => ({
   //   ...base,
 
