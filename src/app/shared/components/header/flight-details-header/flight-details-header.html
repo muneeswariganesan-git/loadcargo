@@ -1,0 +1,131 @@
+
+<!-- FLIGHT HEADER -->
+<div class="container-fluid px-0"> <!-- remove side padding to align with navy bar -->
+  <div class="flight-header">
+
+    <!-- SCROLLS ONLY THE TOP ROW -->
+    <div class="flight-header-viewport">
+      <!-- This wrapper grows to content width, enabling scroll when needed -->
+      <div class="flight-header-scroll-area">
+        <!-- ===========================
+             TOP HEADER (grid: left + right)
+             =========================== -->
+        <div class="top-row">
+
+          <!-- LEFT SECTION -->
+          <div class="left-section">
+            <div class="item">
+              <span class="label">Flight</span>
+              <span class="value">{{ cargoFlightHeaderData.flight }}</span>
+            </div>
+            <div class="item">
+              <span class="label">Date</span>
+              <span class="value">{{ cargoFlightHeaderData.date }}</span>
+            </div>
+            <div class="item">
+              <span class="label">Fitment</span>
+              <span class="values">{{ cargoFlightHeaderData.fitment }}</span>
+            </div>
+            <div class="item">
+              <span class="label">Reg</span>
+              <span class="value">{{ cargoFlightHeaderData.reg }}</span>
+            </div>
+            <div class="item">
+              <span class="label">Stand</span>
+              <span class="value">{{ cargoFlightHeaderData.stand }}</span>
+            </div>
+            <div class="item">
+              <span class="label">Sub Type</span>
+              <span class="values">{{ cargoFlightHeaderData.subType }}</span>
+            </div>
+          </div>
+
+          <!-- RIGHT SECTION — SINGLE LEG -->
+          <div class="right-section single" *ngIf="!cargoFlightHeaderData.isMultiLeg">
+            <div class="value icao org">{{ cargoFlightHeaderData.legs[0]?.origin }}</div>
+            <div class="item std">
+              <span class="label">STD</span>
+              <span class="value time">{{ cargoFlightHeaderData.legs[0]?.std }}</span>
+            </div>
+            <div class="value icao dst">{{ cargoFlightHeaderData.legs[0]?.destination }}</div>
+            <div class="item sta">
+              <span class="label">STA</span>
+              <span class="value time">{{ cargoFlightHeaderData.legs[0]?.sta }}</span>
+            </div>
+            <div class="item etd">
+              <span class="label">ETD</span>
+              <span class="value time">{{ cargoFlightHeaderData.legs[0]?.etd }}</span>
+            </div>
+          </div>
+
+          <!-- RIGHT SECTION — MULTI LEG -->
+          <div class="right-section multi" *ngIf="cargoFlightHeaderData.isMultiLeg">
+            <div class="value icao org">{{ cargoFlightHeaderData.legs[0]?.origin }}</div>
+            <div class="item std1">
+              <span class="label">STD</span>
+              <span class="value time">{{ cargoFlightHeaderData.legs[0]?.std }}</span>
+            </div>
+            <div class="value icao dst">{{ cargoFlightHeaderData.legs[0]?.destination }}</div>
+            <div class="item sta1">
+              <span class="label">STA</span>
+              <span class="value time">{{ cargoFlightHeaderData.legs[0]?.sta }}</span>
+            </div>
+            <div class="item etd1">
+              <span class="label">ETD</span>
+              <span class="value time">{{ cargoFlightHeaderData.legs[0]?.etd }}</span>
+            </div>
+            <div class="item std2">
+              <span class="label">STD</span>
+              <span class="value time">{{ cargoFlightHeaderData.legs[1]?.std }}</span>
+            </div>
+            <div class="item etd2">
+              <span class="label">ETD</span>
+              <span class="value time">{{ cargoFlightHeaderData.legs[1]?.etd }}</span>
+            </div>
+            <button *ngIf="cargoFlightHeaderData.hasMore" class="more-btn" type="button" (click)="onMore()">More</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ===========================
+         BOTTOM NAVY BAR (never scrolls)
+         =========================== -->
+    <div class="bottom-row">
+      <div class="group">
+        <span class="label">Flight Status</span>
+        <span class="val">{{ cargoFlightHeaderData.generalStatus }}</span>
+        <span class="val">{{ cargoFlightHeaderData.generalStatus }}</span>
+      </div>
+      <!-- <div class="group">
+        <span class="label">LO</span>
+        <span class="val">{{ cargoFlightHeaderData.loadControlStatus }}</span>
+      </div> -->
+      <div class="group">
+        <span class="label">Optima RM Active</span>
+        <span class="valv">N</span>
+      </div>
+      <div class="group">
+        <span class="labelb">Build Close</span>
+        <span class="valb">{{ cargoFlightHeaderData.buildClose }}</span>
+      </div>
+      <div class="group">
+        <span class="labelc">Cargo Release</span>
+        <span class="valc">Y</span>
+      </div>
+      <div class="groupr" style="margin-left:45px">
+        <span class="labelm">Manifest</span>
+        <span class="valm">{{ cargoFlightHeaderData.manifest }}</span>
+      </div>
+      <div class="groupo owner">
+        <span class="label">Owner:</span>
+        <span class="valo">{{ cargoFlightHeaderData.owner }}</span>
+      </div>
+      <div class="notes" *ngIf="cargoFlightHeaderData.notes">
+        {{ cargoFlightHeaderData.notes }}
+      </div>
+    </div>
+
+  </div>
+</div>

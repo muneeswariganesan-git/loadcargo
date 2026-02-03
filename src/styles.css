@@ -1,1 +1,175 @@
-/* You can add global styles to this file, and also import other style files */
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+
+.main-content {
+  margin-top: var(--header-h);
+  margin-bottom: var(--footer-h);
+  height: calc(100vh - var(--header-h) - var(--footer-h));
+  overflow: hidden;
+
+  background-image: url('/toflytoserve.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 700px 515px;
+  background-color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:root {
+  --header-height: 64px;
+  --footer-height: 130px;
+  
+  --color-primary: #3f51b5;
+  --color-bg: #ffffff;
+
+
+  --img-logo: url('/logo-light.png');
+  --img-background: url('/assets/images/bg-light.jpg');
+}
+
+.keypad-btn:hover {
+  outline: 2px solid #2b7bff55;
+}
+.keypad-code {
+  font-weight: 700;
+}
+.keypad-line {
+  font-weight: 700;
+
+  line-height: 1;
+}
+.keypad-subline {
+  font-weight: 700;
+  opacity: 0.85;
+  line-height: 1.1;
+}
+.keypad-empty {
+  background: #f4f6f9;
+}
+
+.watermark-wrapper {
+  min-height: 50vh;
+}
+.watermark img {
+  width: 620px;
+  opacity: 0.07;
+  user-select: none;
+  pointer-events: none;
+}
+
+.custom-dialog .mat-mdc-dialog-surface,         /* Angular Material v15+ */
+.custom-dialog .mat-dialog-container {
+  /* Fallback for older */
+  padding: 0 !important;
+  border-radius: 4px; /* optional for a subtle corner */
+}
+
+::ng-deep .flight-dialog-panel .mat-mdc-dialog-content {
+  padding: 0 !important;
+}
+
+/* REMOVE ALL MATERIAL RADIUS, PADDING, AND FORCE CLASSIC LOOK */
+.classic-dialog-panel .mat-mdc-dialog-surface {
+  border-radius: 0 !important;
+  padding: 0 !important;
+  background: #e9edf7 !important; /* your exact background */
+  box-shadow: none !important;
+  transform: none !important;
+  width: auto !important;
+  max-width: none !important;
+  min-width: auto !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+/* Remove Material container padding wrapper */
+.classic-dialog-panel .mat-mdc-dialog-container {
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* Scope to this dialog only; remove the prefix if you don't use panelClass */
+.classic-dialog-panel .dialog-header {
+  position: relative;
+}
+
+/* Base: black X, transparent background */
+.classic-dialog-panel .close-x {
+  all: unset;
+  position: absolute;
+  right: 6px;
+  top: 4px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  width: 22px;
+  height: 20px;
+  line-height: 1;
+
+  color: #000; /* black X by default */
+  background: transparent; /* ensure no red on open */
+  border: none; /* ensure no border on open */
+  border-radius: 0;
+  box-sizing: border-box;
+
+  transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+/* Icon sizing */
+.classic-dialog-panel .close-x .mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+}
+
+.dialog-header {
+  background: #ffffff;
+  padding: 4px 6px;
+  font-size: 13px;
+  font-weight: bold;
+  border-bottom: 1px solid #bbb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+/* Hover: red square with white X */
+.classic-dialog-panel .close-x:hover {
+  background: #d40000;
+  color: #fff;
+  border: 1px solid #7a0000;
+}
+
+/* Keyboard-focus only: show a subtle outline, not a red fill */
+.classic-dialog-panel .close-x:focus-visible {
+  outline: 2px solid #d40000;
+  outline-offset: 2px;
+}
+
+/* Strip default focus ring if not using :focus-visible */
+.classic-dialog-panel .close-x:focus {
+  outline: none; /* avoid turning red on open due to focus */
+}
+
+/* Remove 'active' red fill unless you want it on mousedown */
+.classic-dialog-panel .close-x:active {
+  /* Keep same as base to avoid red on mousedown */
+  background: transparent;
+  color: #000;
+  border: none;
+}

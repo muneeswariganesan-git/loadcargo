@@ -1,0 +1,63 @@
+<div class="page-container">
+  <!-- Header -->
+  
+  <ng-container *ngIf="headerType === 'welcome'; else detailsHeader">
+    <app-welcome-header class="header-bar"></app-welcome-header>
+  </ng-container>
+  <ng-template #detailsHeader>
+    <app-flight-details-header class="header-bar"></app-flight-details-header>
+  </ng-template>
+ 
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- <ng-container [ngSwitch]="action">
+      <div *ngSwitchCase="'F2'">
+        <app-flight-details
+          [header]="flightHeader"
+          [capacityData]="capacityData"
+          [forecastData]="forecastData"
+          [comments]="comments"
+        >
+        </app-flight-details>
+      </div>
+
+      <div *ngSwitchCase="'F3'">
+        <app-flight-details
+          [header]="flightHeader"
+          [capacityData]="capacityData"
+          [forecastData]="forecastData"
+          [comments]="comments"
+        >
+        </app-flight-details>
+      </div>
+
+      <div *ngIf="action === 'F4'">
+        <app-anomalies [product]="product" [action]="action"></app-anomalies>
+      </div>
+
+      <div *ngIf="action === 'F5'">
+        <app-deadload-component [rows]="deadloadRows" [totalKg]="deadloadTotalKg">
+        </app-deadload-component>
+      </div>
+      <div *ngIf="action === 'F6'">
+        <app-dg-screen-component></app-dg-screen-component>
+      </div>
+      <div *ngIf="action === 'F7'">
+        <app-special-load></app-special-load>
+      </div>
+
+      <app-home *ngSwitchCase="'F11'"></app-home>
+    </ng-container> -->
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-light border-top shadow-sm">
+    <app-footer
+      [product]="product"
+      [displayName]="getDisplayProductName(product)"
+      (actionTriggered)="onAction($event)"
+    >
+    </app-footer>
+  </footer>
+</div>

@@ -1,0 +1,194 @@
+<div class="flight-dialog">
+  <div class="dialog-header">
+    <span>Select Flight</span>
+    <button type="button" class="close-x" (click)="close()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="dialog-body">
+    <form #frm="ngForm" (ngSubmit)="onSubmit(frm)" novalidate>
+      <div class="row-line">
+        <label><span class="red">*</span> Flight Number</label>
+
+        <div class="field-group">
+          <div class="field-row">
+            <input
+              class="small-input"
+              name="fn1"
+              [(ngModel)]="formData.fn1"
+              required
+              pattern="^[A-Za-z]{2}$"
+              #fn1="ngModel"
+              (focus)="activeField = 'fn1'"
+              (ngModelChange)="formData.fn1 = (formData.fn1 || '').toUpperCase()"
+              [class.invalid]="fn1.invalid && (fn1.touched || frm.submitted)"
+              [class.active]="activeField === 'fn1'"
+              autocomplete="off"
+              aria-describedby="fn-error"
+            />
+
+            <input
+              #autoFocusFn2
+              class="small-input"
+              name="fn2"
+              [(ngModel)]="formData.fn2"
+              required
+              pattern="^[0-9]{1,4}$"
+              #fn2="ngModel"
+              (focus)="activeField = 'fn2'"
+              (ngModelChange)="formData.fn2 = (formData.fn2 || '').toUpperCase()"
+              [class.invalid]="fn2.invalid && (fn2.touched || frm.submitted)"
+              [class.active]="activeField === 'fn2'"
+              autocomplete="off"
+              aria-describedby="fn-error"
+            />
+          </div>
+
+          <div
+            id="fn-error"
+            class="error-full"
+            [class.show]="
+              (fn1.invalid || fn2.invalid) && (fn1.touched || fn2.touched || frm.submitted)
+            "
+            role="alert"
+            aria-live="polite"
+          >
+            <ng-container *ngIf="fn1.errors?.['required']"
+              >Please enter a valid carrier code.</ng-container
+            >
+            <ng-container *ngIf="fn2.errors?.['required']"
+              >Please enter a valid flight number.</ng-container
+            >
+            <ng-container *ngIf="fn1.errors?.['pattern']"
+              >Carrier must be 2 letters (e.g., BA).</ng-container
+            >
+            <ng-container *ngIf="fn2.errors?.['pattern']"
+              >Flight number must be 1–4 digits.</ng-container
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="row-line">
+        <label><span class="red">*</span> Flight Date</label>
+
+        <div class="field-group">
+          <div class="field-row">
+            <input
+              class="small-input"
+              name="day"
+              [(ngModel)]="formData.day"
+              required
+              pattern="^(0?[1-9]|[12][0-9]|3[01])$"
+              #day="ngModel"
+              (focus)="activeField = 'day'"
+              [class.invalid]="day.invalid && (day.touched || day.dirty || frm.submitted)"
+              [class.active]="activeField === 'day'"
+              autocomplete="off"
+              aria-describedby="date-error"
+            />
+
+            <input
+              class="small-input"
+              name="month"
+              [(ngModel)]="formData.month"
+              required
+              pattern="^(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)$"
+              #month="ngModel"
+              (focus)="activeField = 'month'"
+              (ngModelChange)="formData.month = (formData.month || '').toUpperCase()"
+              [class.invalid]="month.invalid && (month.touched || month.dirty || frm.submitted)"
+              [class.active]="activeField === 'month'"
+              autocomplete="off"
+              aria-describedby="date-error"
+            />
+
+            <input
+              class="small-input"
+              name="year"
+              [(ngModel)]="formData.year"
+              required
+              pattern="^[0-9]{4}$"
+              #year="ngModel"
+              (focus)="activeField = 'year'"
+              [class.invalid]="year.invalid && (year.touched || year.dirty || frm.submitted)"
+              [class.active]="activeField === 'year'"
+              autocomplete="off"
+              aria-describedby="date-error"
+            />
+          </div>
+
+          <div
+            id="date-error"
+            class="error-full"
+            [class.show]="
+              (day.invalid || month.invalid || year.invalid) &&
+              (day.touched || month.touched || year.touched || frm.submitted)
+            "
+            role="alert"
+            aria-live="polite"
+          >
+            <ng-container *ngIf="day.errors?.['required']">Please enter a valid day.</ng-container>
+            <ng-container *ngIf="day.errors?.['pattern']">Enter valid day (1–31).</ng-container>
+
+            <ng-container *ngIf="month.errors?.['required']"
+              >Please enter a valid month.</ng-container
+            >
+            <ng-container *ngIf="month.errors?.['pattern']"
+              >Enter a valid month (JAN–DEC).</ng-container
+            >
+
+            <ng-container *ngIf="year.errors?.['required']"
+              >Please enter a valid year.</ng-container
+            >
+            <ng-container *ngIf="year.errors?.['pattern']">Enter a 4-digit year.</ng-container>
+          </div>
+        </div>
+      </div>
+
+      <div class="row-line">
+        <label><span class="red">*</span> Departure Station</label>
+
+        <div class="field-group">
+          <div class="field-row">
+            <input
+              class="small-input"
+              name="station"
+              [(ngModel)]="formData.station"
+              required
+              pattern="^[A-Za-z]{3,5}$"
+              #station="ngModel"
+              (focus)="activeField = 'station'"
+              (ngModelChange)="formData.station = (formData.station || '').toUpperCase()"
+              [class.invalid]="
+                station.invalid && (station.touched || station.dirty || frm.submitted)
+              "
+              [class.active]="activeField === 'station'"
+              autocomplete="off"
+              aria-describedby="station-error"
+            />
+          </div>
+
+          <div
+            id="station-error"
+            class="error-full"
+            [class.show]="station.invalid && (station.touched || frm.submitted)"
+            role="alert"
+            aria-live="polite"
+          >
+            <ng-container *ngIf="station.errors?.['required']"
+              >Please enter a valid departure station.</ng-container
+            >
+            <ng-container *ngIf="station.errors?.['pattern']">Must be 3 to 5 chars</ng-container>
+          </div>
+        </div>
+      </div>
+
+      <div class="button-row">
+        <button class="search-btn" type="submit">Search</button>
+        <button class="cancel-btn" type="button" (click)="close()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>

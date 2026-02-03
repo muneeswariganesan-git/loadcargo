@@ -1,12 +1,21 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { BackButtonBlocker } from './core/navigation/back-button-blocker';
 
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
 })
 export class App {
-  protected readonly title = signal('loadcargo');
+  constructor(private backBlocker: BackButtonBlocker) {}
+
+  ngOnInit(): void {
+    this.backBlocker.enableBlocker();
+  }
+
+  ngOnDestroy(): void {
+    this.backBlocker.disableBlocker();
+  }
 }

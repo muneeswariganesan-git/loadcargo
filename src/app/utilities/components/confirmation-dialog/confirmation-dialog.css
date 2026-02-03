@@ -1,0 +1,59 @@
+
+.dialog-container {
+    background-color: #e9ecf3;    
+    padding: 25px 40px;
+    text-align: center;
+    width: 100%;
+  }
+  
+  .dialog-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  
+  .msg-bold {
+    font-weight: 600;
+    font-size: 15px;
+    margin: 4px 0;
+  }
+  
+  .button-row button {
+    min-width: 120px;
+    height: 40px;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  
+ 
+  .yes-btn {
+    background-color: #007700;
+    color: #fff !important;
+    border: 2px solid #006600;
+  }
+  .yes-btn:hover {
+    background-color: #009900;
+  }
+  
+ 
+  .no-btn {
+    border: 1px solid #444 !important;
+    background-color: #fff;
+    color: #333 !important;
+  }
+  .no-btn:hover {
+    background-color: #f2f2f2;
+  }
+  
+ 
+  @media (max-width: 480px) {
+    .dialog-container {
+      padding: 16px 18px;
+    }
+    .button-row button {
+      min-width: 100px;
+      font-size: 14px;
+      height: 38px;
+    }
+  }
+  

@@ -1,0 +1,6 @@
+.main-content {
+    flex: 1; /* Takes remaining space */
+    padding: 16px;
+    overflow: auto; /* Scroll only inside content if needed */
+  }
+  

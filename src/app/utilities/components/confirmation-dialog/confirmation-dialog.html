@@ -1,0 +1,31 @@
+
+<div class="dialog-container">
+    <h2 class="dialog-title">{{ data.title }}</h2>
+  
+    <p class="msg-bold">{{ data.message1 }}</p>
+    <p class="msg-bold" *ngIf="data.message2">{{ data.message2 }}</p>
+  
+    <!-- Responsive buttons: Bootstrap grid (optional but recommended) -->
+    <div class="button-row row mt-3 g-2">
+      <div class="col-12 col-sm-6 text-sm-end">
+        <button
+          mat-button
+          class="yes-btn w-100 w-sm-auto me-sm-3"
+          (click)="dialogRef.close(true)"
+        >
+          {{ data.yesText || 'Yes' }}
+        </button>
+      </div>
+  
+      <div class="col-12 col-sm-6 text-sm-start">
+        <button
+          mat-button
+          class="no-btn w-100 w-sm-auto"
+          (click)="dialogRef.close(false)"
+        >
+          {{ data.noText || 'No' }}
+        </button>
+      </div>
+    </div>
+  </div>
+  

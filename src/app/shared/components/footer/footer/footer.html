@@ -1,0 +1,32 @@
+<footer class="fixed-bottom app-footer">
+  <div class="container-fluid">
+    <div class="row toolbar">
+      <div class="col-12 d-flex justify-content-between align-items-center">
+        <span class="footer-title">
+          {{ isCtrlActive ? 'Cargo Extended Keypad' : displayName + ' Cargo Keypad ' }}
+        </span>
+        <span class="footer-extra">More... Ctrl</span>
+      </div>
+    </div>
+
+    <div class="keystrip">
+      <div class="keystrip-inner">
+        <ng-container *ngFor="let action of actions">
+          <button
+            *ngIf="action.key"
+            type="button"
+            class="key-tile"
+            (click)="handleAction(action.key)"
+          >
+            <img class="tile-icon-abs" [src]="'/keypad_nav.png'" alt="" aria-hidden="true" />
+
+            <span class="keypad-code">{{ action.key }}</span>
+            <span class="keypad-line">{{ action.label }}</span>
+          </button>
+
+          <div *ngIf="!action.key" class="key-tile key-empty"></div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</footer>

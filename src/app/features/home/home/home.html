@@ -1,0 +1,12 @@
+
+<!-- home-screen.component.html -->
+<app-welcome-header></app-welcome-header>
+
+<div class="main-content">
+  <!-- Your main content goes here -->
+</div>
+
+<app-product-footer
+  [products]="products"
+  (productClick)="navigateToProduct($event)">
+</app-product-footer>
