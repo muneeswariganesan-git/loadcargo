@@ -1,13 +1,13 @@
 import { Routes } from '@angular/router';
 import { MsalGuard, MsalRedirectComponent } from '@azure/msal-angular';
 export const routes: Routes = [
-  {
-    path: 'oauth/callback',
-    component: MsalRedirectComponent, 
-  },
+  // {
+  //   path: 'oauth/callback',
+  //   component: MsalRedirectComponent, 
+  // },
   {
     path: '',
-    canActivate: [MsalGuard],
+  //  canActivate: [MsalGuard],
     loadComponent: () => import('./features/home/home/home').then((m) => m.Home),
   },
   {

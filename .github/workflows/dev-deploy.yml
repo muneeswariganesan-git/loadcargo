@@ -1,0 +1,69 @@
+# UI Repository Dev Workflow
+# This workflow deploys to dev or uat environments from the develop branch ONLY
+# Trigger: workflow_dispatch (manual) or push to develop branch
+# Restrictions: Can ONLY run from develop branch, NOT from main
+
+name: Dev - Deploy UI
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        type: choice
+        options:
+          - dev
+          - uat
+        default: 'dev'
+      skip-tests:
+        description: 'Skip running tests?'
+        required: false
+        type: choice
+        options:
+          - 'false'
+          - 'true'
+        default: 'false'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  # Deploy to dev environment
+  deploy-dev:
+    name: Deploy to Dev
+    if: |
+      (github.event_name == 'push') || 
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'dev')
+    uses: IAG-Cargo/iagc-loadcargo-devops-tooling/.github/workflows/reusable-ui-deploy.yml@main
+    with:
+      environment: dev
+      s3-bucket: ${{ vars.DEV_S3_BUCKET }}
+      cloudfront-distribution-id: ${{ vars.DEV_CLOUDFRONT_DIST_ID }}
+      node-version: '22'
+      build-output-dir: dist
+      skip-tests: ${{ github.event.inputs.skip-tests == 'true' || false }}
+      snyk-enabled: true
+      snyk-severity-threshold: high
+    secrets:
+      AWS_OIDC_ROLE_ARN: ${{ secrets.AWS_OIDC_ROLE_ARN_DEV }}
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+  # Deploy to uat environment
+  deploy-uat:
+    name: Deploy to UAT
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'uat'
+    uses: IAG-Cargo/iagc-loadcargo-devops-tooling/.github/workflows/reusable-ui-deploy.yml@main
+    with:
+      environment: uat
+      s3-bucket: ${{ vars.UAT_S3_BUCKET }}
+      cloudfront-distribution-id: ${{ vars.UAT_CLOUDFRONT_DIST_ID }}
+      node-version: '22'
+      build-output-dir: dist
+      skip-tests: ${{ github.event.inputs.skip-tests == 'true' || false }}
+      snyk-enabled: true
+      snyk-severity-threshold: high
+    secrets:
+      AWS_OIDC_ROLE_ARN: ${{ secrets.AWS_OIDC_ROLE_ARN_UAT }}
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}

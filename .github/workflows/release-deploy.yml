@@ -1,0 +1,106 @@
+# UI Repository Release Workflow
+# This workflow deploys to UAT → PRE → PROD environments from the main branch ONLY
+# Each environment requires approval before deployment
+# Trigger: workflow_dispatch (manual) or push to main branch
+
+
+name: Release - Deploy UI
+
+on:
+  # push:
+  #   branches:
+  #     - main  # Auto-trigger release pipeline on push to main
+  workflow_dispatch:
+    inputs:
+      deploy-to-uat:
+        description: 'Deploy to UAT?'
+        required: false
+        type: boolean
+        default: true
+      deploy-to-pre:
+        description: 'Deploy to PRE?'
+        required: false
+        type: boolean
+        default: true
+      deploy-to-prod:
+        description: 'Deploy to PROD?'
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  # Validation: Ensure workflow only runs from main branch
+  validate-branch:
+    name: Validate Branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check branch
+        run: |
+          if [[ "${{ github.ref }}" != "refs/heads/main" ]]; then
+            echo "❌ Error: This workflow can only run from the 'main' branch"
+            echo "Current branch: ${{ github.ref }}"
+            echo "For dev/uat deployments, use the dev workflow from develop branch"
+            exit 1
+          fi
+          echo "✅ Branch validation passed: Running from main branch"
+
+  # Deploy to UAT environment (first stage)
+  deploy-uat:
+    name: Deploy to UAT
+    needs: validate-branch
+    if: ${{ github.event.inputs.deploy-to-uat != 'false' }}
+    uses: IAG-Cargo/iagc-loadcargo-devops-tooling/.github/workflows/reusable-ui-deploy.yml@main
+    with:
+      environment: uat
+      s3-bucket: s3b-uat-euwe1-loadcargo-ui-01
+      cloudfront-distribution-id: ${{ vars.UAT_CLOUDFRONT_DIST_ID }}
+      node-version: '22'
+      build-output-dir: dist
+      skip-tests: false  # Tests are mandatory in release pipeline
+      snyk-enabled: true
+      snyk-severity-threshold: high
+    secrets:
+      AWS_OIDC_ROLE_ARN: ${{ secrets.AWS_OIDC_ROLE_ARN_UAT }}
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+  # Deploy to PRE environment (second stage, requires UAT success)
+  deploy-pre:
+    name: Deploy to PRE
+    needs: deploy-uat
+    if: ${{ github.event.inputs.deploy-to-pre != 'false' }}
+    uses: IAG-Cargo/iagc-loadcargo-devops-tooling/.github/workflows/reusable-ui-deploy.yml@main
+    with:
+      environment: pre
+      s3-bucket: s3b-pre-euwe1-loadcargo-ui-01
+      cloudfront-distribution-id: ${{ vars.PRE_CLOUDFRONT_DIST_ID }}
+      node-version: '22'
+      build-output-dir: dist
+      skip-tests: false  # Tests are mandatory in release pipeline
+      snyk-enabled: true
+      snyk-severity-threshold: high
+    secrets:
+      AWS_OIDC_ROLE_ARN: ${{ secrets.AWS_OIDC_ROLE_ARN_PRE }}
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+  # Deploy to PROD environment (final stage, requires PRE success)
+  deploy-prod:
+    name: Deploy to PROD
+    needs: deploy-pre
+    if: ${{ github.event.inputs.deploy-to-prod != 'false' }}
+    uses: IAG-Cargo/iagc-loadcargo-devops-tooling/.github/workflows/reusable-ui-deploy.yml@main
+    with:
+      environment: prod
+      s3-bucket: s3b-prod-euwe1-loadcargo-ui-01
+      cloudfront-distribution-id: ${{ vars.PROD_CLOUDFRONT_DIST_ID }}
+      node-version: '22'
+      build-output-dir: dist
+      skip-tests: false  # Tests are mandatory in release pipeline
+      snyk-enabled: true
+      snyk-severity-threshold: high
+    secrets:
+      AWS_OIDC_ROLE_ARN: ${{ secrets.AWS_OIDC_ROLE_ARN_PROD }}
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
