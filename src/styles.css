@@ -1,4 +1,4 @@
-html,
+/* html,
 body {
   height: 100%;
   margin: 0;
@@ -8,9 +8,22 @@ body {
   height: 100vh;
   font-family: Arial, sans-serif;
   overflow: hidden;
+} */
+
+:root {
+  --header-h: 80px;          /* intended header block height */
+  --header-extra: 4px;       
+  --footer-h: 160px;
+  --page-bg: #ffffff; 
+  
+ --footer-extra: 12px;      /* extra spacing above footer */
+ /* Optional: account for iOS safe area */
+ --safe-bottom: env(safe-area-inset-bottom, 0px)
+
 }
 
-.main-content {
+
+/* .main-content {
   margin-top: var(--header-h);
   margin-bottom: var(--footer-h);
   height: calc(100vh - var(--header-h) - var(--footer-h));
@@ -25,9 +38,22 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+} */
+
+.main-content {
+  position: fixed;
+  top: calc(var(--header-h) + var(--header-extra));
+  bottom: var(--footer-h);
+  left: 0;
+  right: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
-:root {
+
+
+/* :root {
   --header-height: 64px;
   --footer-height: 130px;
   
@@ -37,7 +63,7 @@ body {
 
   --img-logo: url('/logo-light.png');
   --img-background: url('/assets/images/bg-light.jpg');
-}
+} */
 
 .keypad-btn:hover {
   outline: 2px solid #2b7bff55;

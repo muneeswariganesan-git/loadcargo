@@ -1,8 +1,7 @@
-
 <!-- FLIGHT HEADER -->
-<div class="container-fluid px-0"> <!-- remove side padding to align with navy bar -->
+<div class="container-fluid px-0">
+  <!-- remove side padding to align with navy bar -->
   <div class="flight-header">
-
     <!-- SCROLLS ONLY THE TOP ROW -->
     <div class="flight-header-viewport">
       <!-- This wrapper grows to content width, enabling scroll when needed -->
@@ -11,7 +10,6 @@
              TOP HEADER (grid: left + right)
              =========================== -->
         <div class="top-row">
-
           <!-- LEFT SECTION -->
           <div class="left-section">
             <div class="item">
@@ -82,39 +80,58 @@
               <span class="label">ETD</span>
               <span class="value time">{{ cargoFlightHeaderData.legs[1]?.etd }}</span>
             </div>
-            <button *ngIf="cargoFlightHeaderData.hasMore" class="more-btn" type="button" (click)="onMore()">More</button>
+            <button
+              *ngIf="cargoFlightHeaderData.hasMore"
+              class="more-btn"
+              type="button"
+              (click)="onMore()"
+            >
+              More
+            </button>
           </div>
-
         </div>
       </div>
     </div>
 
-    <!-- ===========================
-         BOTTOM NAVY BAR (never scrolls)
-         =========================== -->
+   
     <div class="bottom-row">
       <div class="group">
         <span class="label">Flight Status</span>
         <span class="val">{{ cargoFlightHeaderData.generalStatus }}</span>
         <span class="val">{{ cargoFlightHeaderData.generalStatus }}</span>
       </div>
+     
       <!-- <div class="group">
-        <span class="label">LO</span>
-        <span class="val">{{ cargoFlightHeaderData.loadControlStatus }}</span>
+        <span class="label">Optima RM Active</span>
+        <span class="valv">N</span>
       </div> -->
       <div class="group">
         <span class="label">Optima RM Active</span>
-        <span class="valv">N</span>
+        <span class="valv">
+          {{ buildCloseDisplay.text }}
+        </span>
       </div>
       <div class="group">
         <span class="labelb">Build Close</span>
         <span class="valb">{{ cargoFlightHeaderData.buildClose }}</span>
       </div>
-      <div class="group">
+      <!-- <div class="group">
         <span class="labelc">Cargo Release</span>
         <span class="valc">Y</span>
+      </div> -->
+      <div class="group">
+        <span class="labelc">Cargo Release</span>
+      
+        <span
+          class="valc"
+          [ngClass]="cargoReleaseDisplay.status"
+          [title]="cargoReleaseDisplay.cutoff ? ('Cut-off ' + (cargoReleaseDisplay.cutoff | date:'HH:mm')) : ''"
+          aria-label="Cargo release status"
+        >
+          {{ cargoReleaseDisplay.text }}
+        </span>
       </div>
-      <div class="groupr" style="margin-left:45px">
+      <div class="groupr" style="margin-left: 25px">
         <span class="labelm">Manifest</span>
         <span class="valm">{{ cargoFlightHeaderData.manifest }}</span>
       </div>
@@ -122,10 +139,21 @@
         <span class="label">Owner:</span>
         <span class="valo">{{ cargoFlightHeaderData.owner }}</span>
       </div>
-      <div class="notes" *ngIf="cargoFlightHeaderData.notes">
+      <!-- <div class="notes" *ngIf="cargoFlightHeaderData.notes">
         {{ cargoFlightHeaderData.notes }}
-      </div>
+      </div> -->
+      <!-- Cargo Release -->
+      <!-- <div class="group">
+        <span class="labelc">Cargo Release</span>
+        <span
+          class="valc"
+          [ngClass]="cargoReleaseDisplay.status"
+          [title]="cargoReleaseDisplay.cutoff ? ('Cut-off ' + (cargoReleaseDisplay.cutoff | date:'HH:mm')) : ''"
+          aria-label="Cargo release status"
+        >
+          {{ cargoReleaseDisplay.text }}
+        </span>
+      </div> -->
     </div>
-
   </div>
 </div>

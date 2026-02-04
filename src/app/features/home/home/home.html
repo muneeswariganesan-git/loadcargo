@@ -1,12 +1,25 @@
 
-<!-- home-screen.component.html -->
-<app-welcome-header></app-welcome-header>
+
+<!-- <app-welcome-header></app-welcome-header>
 
 <div class="main-content">
-  <!-- Your main content goes here -->
+ 
 </div>
 
 <app-product-footer
   [products]="products"
   (productClick)="navigateToProduct($event)">
-</app-product-footer>
+</app-product-footer> -->
+
+<!-- home-screen.component.html -->
+  <div class="page">
+    <app-welcome-header class="header"></app-welcome-header>
+
+    <main class="main-content" role="main" aria-label="Main content area"></main>
+
+    <app-product-footer
+      class="footer"
+      [products]="products"
+      (productClick)="navigateToProduct($event)">
+    </app-product-footer>
+  </div>

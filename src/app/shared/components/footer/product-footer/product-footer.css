@@ -139,3 +139,43 @@
     flex: 0 0 220px;
   }
 }
+
+.arrow-icon {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  width: 18px;   /* fixes raster size */
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ensure the SVG is drawn at 1:1 without layout scaling */
+.arrow-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  /* Minor hints for better small-size rasterization in some browsers */
+  image-rendering: optimizeQuality;
+  shape-rendering: geometricPrecision;
+}
+.teal-arrow-icon {
+  width: 20px;     /* adjust size */
+  height: 20px;
+}
+
+.teal-arrow-icon .icon-bg {
+  fill: #43C3B3;   /* teal */
+}
+
+.teal-arrow-icon .icon-arrow {
+  fill: #FFFFFF;   /* white */
+}
+
+ .keypad-code {
+  font-weight: 700;
+  font-size: 16px;
+  color:#018A75;
+}
+

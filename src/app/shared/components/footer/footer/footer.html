@@ -18,7 +18,29 @@
             class="key-tile"
             (click)="handleAction(action.key)"
           >
-            <img class="tile-icon-abs" [src]="'/keypad_nav.png'" alt="" aria-hidden="true" />
+          <span class="arrow-icon" aria-hidden="true">
+            <svg class="teal-arrow-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="12" class="icon-bg" />
+  
+              <path
+                class="icon-arrow"
+                d="
+        M 8 16
+        a 1.3 1.3 0 0 1 0 -1.8
+        L 13 9
+        H 10
+        a 1 1 0 0 1 0 -2
+        H 16
+        a 1 1 0 0 1 1 1
+        V 14
+        a 1 1 0 0 1 -2 0
+        V 11
+        l -5 5
+        a 1.3 1.3 0 0 1 -1.8 0
+        z"
+              />
+            </svg>
+            </span>
 
             <span class="keypad-code">{{ action.key }}</span>
             <span class="keypad-line">{{ action.label }}</span>

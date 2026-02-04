@@ -7,7 +7,7 @@ import {
   provideZoneChangeDetection,
 } from '@angular/core';
 
-import { provideRouter } from '@angular/router';
+import { provideRouter, withEnabledBlockingInitialNavigation } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 import {
@@ -97,7 +97,7 @@ export const appConfig: ApplicationConfig = {
 
     importProvidersFrom(CommonModule),
 
-    provideRouter(routes),
+    provideRouter(routes, withEnabledBlockingInitialNavigation()),
 
     provideHttpClient(withInterceptorsFromDi(), withFetch()),
 

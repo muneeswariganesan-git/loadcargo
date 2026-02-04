@@ -25,26 +25,10 @@ getFlightHeader(request: CargoFlightHeaderRequest): Observable<FlightDetails> {
 
   return this.http
     .get<CargoFlightHeaderResponse>(path, { params })
-    .pipe(map(res => res.data)); // <-- ONLY place you access `.data`
+    .pipe(map(res => res.data)); 
 }
 
   
-// getFlightHeader(query: CargoFlightHeaderRequest): Observable<FlightDetails> {
-//   const path = `${this.baseUrl}/vfh/${query.carrier}/${query.flightNo}`;
-
-//   let params = new HttpParams()
-//     .set('origin', query.origin)
-//     .set('productCode', query.productCode)
-//     .set('depDateTime', query.depDateTime);
-
-//   if (query.destination) params = params.set('destination', query.destination);
-//   if (query.flightNoSfx) params = params.set('flightNoSfx', query.flightNoSfx);
-//   if (query.iataServiceType) params = params.set('iataServiceType', query.iataServiceType);
-
-//   return this.http
-//     .get<CargoFlightHeaderResponse>(path, { params })
-//     .pipe(map((response) => response.data));
-// }
 
   getCargoFlightHeader(): Observable<CargoFlightHeaderResponse> {
     const mockResponse: CargoFlightHeaderResponse = {

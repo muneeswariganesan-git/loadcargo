@@ -20,6 +20,29 @@
   box-sizing: border-box;
 }
 
+.cr-done {
+  color: #0a7c2a;      
+  font-weight: 700;
+}
+
+
+.cr-ok {
+   color: #b91c1c; 
+     
+}
+
+
+.cr-overdue {
+  color: #6b7280;  
+       
+  font-weight: 700;
+}
+
+
+.cr-na {
+  color: #9ca3af;       
+}
+
 .flight-header .label,
 .flight-header .value,
 .flight-header .icao,
@@ -235,7 +258,7 @@
     margin-left: 50%;
   }
   .valc {
-    margin-left: 67%;
+    margin-left: 50%;
   }
   .labelm {
     margin-left: 96% !important;
@@ -320,9 +343,37 @@
   .valb {
     margin-left: 62%;
   }
-  .valc {
-    margin-left: 80%;
-  }
+
+.valc {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+
+.cr-done {
+  color: #0a7c2a;      
+  font-weight: 700;
+}
+
+
+.cr-ok {
+   color: #b91c1c; 
+     
+}
+
+
+.cr-overdue {
+  color: #6b7280;  
+       
+  font-weight: 700;
+}
+
+
+.cr-na {
+  color: #9ca3af;       
+}
   .valo {
     margin-left: 80px;
   }

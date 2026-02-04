@@ -3,23 +3,38 @@ import { Component, DestroyRef, inject } from '@angular/core';
 import { filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ProductService } from '../../../services/product-service';
-import {
-  FlightDetails,
-  FlightHeaderViewModel
-} from '../../../models/cargo-flight-header-model';
+import { FlightDetails, FlightHeaderViewModel } from '../../../models/cargo-flight-header-model';
 
 type LegVM = {
   origin?: string;
   destination?: string;
-  std?: string;  // HHmm (+n)
-  sta?: string;  // HHmm (+n)
-  etd?: string;  // HHmm (+n) — blank unless an Estimated departure exists
+  std?: string;
+  sta?: string;
+  etd?: string;
 };
 
 type HeaderVM = FlightHeaderViewModel & {
-  isMultiLeg: boolean;   // flightLeg.length > 1
-  hasMore: boolean;      // same as isMultiLeg
-  legs: LegVM[];         // [0] first leg, [1] second leg (if present)
+  isMultiLeg: boolean;
+  hasMore: boolean;
+  legs: LegVM[];
+
+  generalStatusDisplay?: string;
+};
+
+type BuildCloseDisplay = {
+  text: 'Y' | 'N' | '--';
+  diffHours?: number | null;
+};
+type CargoReleaseDisplay = {
+  text: string;
+
+  status: 'cr-done' | 'cr-ok' | 'cr-due' | 'cr-overdue' | 'cr-na';
+
+  cutoff?: Date | null;
+
+  etdOrStd?: Date | null;
+
+  usedEtd?: boolean;
 };
 
 @Component({
@@ -30,6 +45,16 @@ type HeaderVM = FlightHeaderViewModel & {
   styleUrls: ['./flight-details-header.css'],
 })
 export class FlightDetailsHeader {
+  private readonly CR_BASIS: 'STD' | 'ETD' | 'ETD_PREF_STD_FALLBACK' = 'STD';
+  buildCloseDisplay: BuildCloseDisplay = { text: '--', diffHours: null };
+  cargoReleaseDisplay: CargoReleaseDisplay = {
+    text: '--',
+    status: 'cr-na',
+    cutoff: null,
+    etdOrStd: null,
+    usedEtd: false,
+  };
+
   private readonly destroyRef = inject(DestroyRef);
   cargoFlightHeaderData!: HeaderVM;
 
@@ -41,18 +66,52 @@ export class FlightDetailsHeader {
         filter((data): data is FlightDetails => data !== null),
         takeUntilDestroyed(this.destroyRef)
       )
-      .subscribe(data => {
+      .subscribe((data) => {
         this.cargoFlightHeaderData = this.mapHeaderData(data);
-        console.log(JSON.stringify(this.cargoFlightHeaderData), 'header-vm');
+
+        this.cargoReleaseDisplay = this.computeCargoReleaseDisplay(data);
+
+        this.buildCloseDisplay = this.computeBuildCloseDisplay(data);
+        this.cargoFlightHeaderData.generalStatusDisplay = this.mapGeneralStatusDisplay(
+          this.cargoFlightHeaderData.generalStatus
+        );
       });
   }
 
   onMore(): void {
-    // Hook this to a dialog/bottom-sheet to show all legs.
     console.log('More legs clicked');
   }
+  private computeBuildCloseDisplay(header: FlightDetails): BuildCloseDisplay {
+    // 1) Get STD (Scheduled Departure)
+    const firstLeg = header.flightLeg?.[0];
+    const dts: any[] = Array.isArray(firstLeg?.dateTimes) ? firstLeg.dateTimes : [];
 
-  // ------------------ Mapping ------------------
+    const depSTDStr =
+      dts.find((d) => d.dateTimeType === 'Departure' && d.dateTimeStatus === 'Scheduled')
+        ?.dateTimeLocal ?? header?.datedFlightLeg?.scheduledDepartureDateLocal;
+
+    // 2) Get Build Close
+    const bcStr = header?.product?.plannedBuildCloseTime;
+
+    if (!depSTDStr || !bcStr) {
+      return { text: '--', diffHours: null };
+    }
+
+    const std = new Date(depSTDStr);
+    const bc = new Date(bcStr);
+
+   
+    const diffMs = std.getTime() - bc.getTime();
+    const diffHours = diffMs / (1000 * 60 * 60);
+
+  
+    if (diffHours > 18) {
+      return { text: 'Y', diffHours };
+    } else {
+      return { text: 'N', diffHours };
+    }
+  }
+  // ------------------ Mapping (UNCHANGED except last two lines) ------------------
 
   private mapHeaderData(header: FlightDetails): HeaderVM {
     if (!header?.datedFlightLeg) return {} as HeaderVM;
@@ -67,11 +126,19 @@ export class FlightDetailsHeader {
     const pickTimes = (leg: any) => {
       const dt = Array.isArray(leg?.dateTimes) ? leg.dateTimes : [];
 
-      const depScheduled = dt.find((d: any) => d.dateTimeType === 'Departure' && d.dateTimeStatus === 'Scheduled');
-      const depEstimated = dt.find((d: any) => d.dateTimeType === 'Departure' && d.dateTimeStatus === 'Estimated');
+      const depScheduled = dt.find(
+        (d: any) => d.dateTimeType === 'Departure' && d.dateTimeStatus === 'Scheduled'
+      );
+      const depEstimated = dt.find(
+        (d: any) => d.dateTimeType === 'Departure' && d.dateTimeStatus === 'Estimated'
+      );
 
-      const arrScheduled = dt.find((d: any) => d.dateTimeType === 'Arrival' && d.dateTimeStatus === 'Scheduled');
-      const arrEstimated = dt.find((d: any) => d.dateTimeType === 'Arrival' && d.dateTimeStatus === 'Estimated');
+      const arrScheduled = dt.find(
+        (d: any) => d.dateTimeType === 'Arrival' && d.dateTimeStatus === 'Scheduled'
+      );
+      const arrEstimated = dt.find(
+        (d: any) => d.dateTimeType === 'Arrival' && d.dateTimeStatus === 'Estimated'
+      );
 
       // STD: prefer Scheduled, fallback Estimated
       const stdLocal = depScheduled?.dateTimeLocal ?? depEstimated?.dateTimeLocal;
@@ -85,7 +152,12 @@ export class FlightDetailsHeader {
       return { stdLocal, etdLocal, staLocal, hasEtd: !!depEstimated?.dateTimeLocal };
     };
 
-    const { stdLocal: firstSTD, etdLocal: firstETD, staLocal: firstSTA, hasEtd: firstHasEtd } = pickTimes(firstLeg);
+    const {
+      stdLocal: firstSTD,
+      etdLocal: firstETD,
+      staLocal: firstSTA,
+      hasEtd: firstHasEtd,
+    } = pickTimes(firstLeg);
     const { stdLocal: secondSTD, etdLocal: secondETD, hasEtd: secondHasEtd } = pickTimes(secondLeg);
 
     // Journey base for +n on downstream legs
@@ -98,18 +170,16 @@ export class FlightDetailsHeader {
       legsVM.push({
         origin: firstLeg?.flightLegOrigin ?? header.datedFlightLeg.originStation,
         destination: firstLeg?.flightLegDestination ?? header.datedFlightLeg.destinationStation,
-        std: this.formatTimeWithShift(firstSTD, journeyBase),          // +n vs journey start
-        sta: this.formatArrivalPlus(firstSTA, firstSTD),               // +n vs this leg's STD
-        // ETD shown only if we actually have an Estimated departure
+        std: this.formatTimeWithShift(firstSTD, journeyBase),
+        sta: this.formatArrivalPlus(firstSTA, firstSTD),
+
         etd: firstHasEtd ? this.formatTimeWithShift(firstETD, journeyBase) : '',
       });
     }
 
-    // Second leg column (STD/ETD only)
     if (secondLeg) {
       legsVM.push({
         std: this.formatTimeWithShift(secondSTD, journeyBase),
-        // Consistent rule: ETD only if Estimated exists
         etd: secondHasEtd ? this.formatTimeWithShift(secondETD, journeyBase) : '',
       });
     }
@@ -118,16 +188,19 @@ export class FlightDetailsHeader {
       origin: legsVM[0]?.origin ?? header.datedFlightLeg.originStation,
       destination: legsVM[0]?.destination ?? header.datedFlightLeg.destinationStation,
 
-      flight: `${header.datedFlightLeg.operatorCarrierCode} ${header.datedFlightLeg.operationalFlightNumber}${header.datedFlightLeg.operationalFlightNumberSuffix ?? ''}`,
+      flight: `${header.datedFlightLeg.operatorCarrierCode} ${
+        header.datedFlightLeg.operationalFlightNumber
+      }${header.datedFlightLeg.operationalFlightNumberSuffix ?? ''}`,
       date: this.formatDate(firstSTD ?? header.datedFlightLeg.scheduledDepartureDateLocal),
 
-      fitment: `${header.currentFlightFitment?.palletCount ?? 0}P ${header.currentFlightFitment?.containerCount ?? 0}C`,
+      fitment: `${header.currentFlightFitment?.palletCount ?? 0}P ${
+        header.currentFlightFitment?.containerCount ?? 0
+      }C`,
 
       reg: header.aircraftRegistrationCode,
       stand: header.standNumber,
       subType: header.airfliteAircraftSubtype ?? header.fmAircraftSubType,
 
-      // Backward compatibility for single-leg bindings
       std: legsVM[0]?.std ?? '',
       sta: legsVM[0]?.sta ?? '',
 
@@ -153,7 +226,115 @@ export class FlightDetailsHeader {
     return vm;
   }
 
-  // ------------------ Formatting helpers ------------------
+  private mapGeneralStatusDisplay(code?: string): string {
+    if (!code) return '--';
+    const c = code.toUpperCase();
+
+    const map: Record<string, string> = {
+      GO: 'GO',
+      GS: 'GS',
+    };
+
+    return map[c] ?? c; // passthrough if not mapped
+  }
+
+  private computeCargoReleaseDisplay(header: FlightDetails): CargoReleaseDisplay {
+    // -------------------------------
+    // 1) If Load Release Status is Final → Show “Y”
+    // -------------------------------
+    const loadStatus = header?.flightStatus?.loadReleaseStatus?.toString().toUpperCase();
+    if (loadStatus === 'FINAL') {
+      return {
+        text: 'Y',
+        status: 'cr-done',
+        cutoff: null,
+        etdOrStd: null,
+        usedEtd: false,
+      };
+    }
+
+    const firstLeg = header.flightLeg?.[0];
+    const dt = Array.isArray(firstLeg?.dateTimes) ? firstLeg.dateTimes : [];
+
+    const depSTD =
+      dt.find((d) => d.dateTimeType === 'Departure' && d.dateTimeStatus === 'Scheduled')
+        ?.dateTimeLocal ?? header?.datedFlightLeg?.scheduledDepartureDateLocal;
+
+    if (!depSTD) {
+      return {
+        text: '--',
+        status: 'cr-na',
+        cutoff: null,
+        etdOrStd: null,
+        usedEtd: false,
+      };
+    }
+
+    const stdDate = new Date(depSTD);
+
+    const crStr = header?.product?.plannedLoadReleaseTime;
+    if (!crStr) {
+      return {
+        text: '--',
+        status: 'cr-na',
+        cutoff: null,
+        etdOrStd: stdDate,
+        usedEtd: false,
+      };
+    }
+
+    const crDate = new Date(crStr);
+
+    const cutoff = new Date(stdDate.getTime() - 150 * 60 * 1000); // 150 mins = 2.5 hours
+
+    const hh = crDate.getHours().toString().padStart(2, '0');
+    const mm = crDate.getMinutes().toString().padStart(2, '0');
+    const crHHMM = `${hh}${mm}`;
+
+    if (crDate > cutoff) {
+      return {
+        text: crHHMM,
+        status: 'cr-overdue', // RED
+        cutoff,
+        etdOrStd: stdDate,
+        usedEtd: false,
+      };
+    }
+
+    return {
+      text: crHHMM,
+      status: 'cr-ok', // GREY
+      cutoff,
+      etdOrStd: stdDate,
+      usedEtd: false,
+    };
+  }
+
+  private pickBaseForCR(header: FlightDetails): { baseDate: Date; usedEtd: boolean } | null {
+    const firstLeg = header.flightLeg?.[0];
+    const dts: any[] = Array.isArray(firstLeg?.dateTimes) ? firstLeg!.dateTimes : [];
+
+    const depETD = dts.find(
+      (d) => d.dateTimeType === 'Departure' && d.dateTimeStatus === 'Estimated'
+    )?.dateTimeLocal;
+    const depSTD =
+      dts.find((d) => d.dateTimeType === 'Departure' && d.dateTimeStatus === 'Scheduled')
+        ?.dateTimeLocal ?? header?.datedFlightLeg?.scheduledDepartureDateLocal;
+
+    if (this.CR_BASIS === 'ETD') {
+      if (!depETD) return null;
+      return { baseDate: this.parseLocal(depETD), usedEtd: true };
+    }
+    if (this.CR_BASIS === 'ETD_PREF_STD_FALLBACK') {
+      if (depETD) return { baseDate: this.parseLocal(depETD), usedEtd: true };
+      if (depSTD) return { baseDate: this.parseLocal(depSTD), usedEtd: false };
+      return null;
+    }
+
+    if (depSTD) return { baseDate: this.parseLocal(depSTD), usedEtd: false };
+    if (depETD) return { baseDate: this.parseLocal(depETD), usedEtd: true };
+    return null;
+  }
 
   private formatDate(dateStr?: string): string {
     if (!dateStr) return '';
@@ -171,7 +352,6 @@ export class FlightDetailsHeader {
     return `${hh}${mm}`;
   }
 
-  /** HHmm (+n) where n = day shift from baseStr (journey start) to targetStr (local date only) */
   private formatTimeWithShift(targetStr?: string, baseStr?: string): string {
     if (!targetStr) return '';
     const t = new Date(targetStr);
@@ -181,7 +361,6 @@ export class FlightDetailsHeader {
     return `${hhmm}${offset > 0 ? `+${offset}` : ''}`;
   }
 
-  /** HHmm (+n) for STA; n = day difference between this leg's STD and STA (local dates) */
   private formatArrivalPlus(arrivalStr?: string, legStdStr?: string): string {
     if (!arrivalStr) return '';
     const arr = new Date(arrivalStr);
@@ -195,5 +374,19 @@ export class FlightDetailsHeader {
     const aD = new Date(a.getFullYear(), a.getMonth(), a.getDate());
     const bD = new Date(b.getFullYear(), b.getMonth(), b.getDate());
     return Math.round((bD.getTime() - aD.getTime()) / 86400000);
+  }
+
+  private parseLocal(localISO: string): Date {
+    return new Date(localISO);
+  }
+
+  private minusMinutes(d: Date, minutes: number): Date {
+    return new Date(d.getTime() - minutes * 60 * 1000);
+  }
+
+  private hhmm(d: Date): string {
+    const hh = d.getHours().toString().padStart(2, '0');
+    const mm = d.getMinutes().toString().padStart(2, '0');
+    return `${hh}${mm}`;
   }
 }

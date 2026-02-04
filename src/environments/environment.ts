@@ -19,3 +19,12 @@ export const environment = {
     scopes: ['User.Read.All', 'User.Read', 'openid'],
   },
 };
+
+
+
+// loadCargoApi: {
+ // https://loadcargo.dev.iagcargo.com/v1/cfh/BA/247?origin=LHR&destination=JFK&productCode=MM&depDateTime=2025-12-05T10:00:00&flightNoSfx=A&iataServiceType=C
+//   uri: 'https://loadcargo.dev.iagcargo.com/v1/',
+//   scopes: ['api://9f0c1abc-xxxx-yyyy-zzzz-1234567890/access_as_user'],
+// },
+

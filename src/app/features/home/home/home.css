@@ -1,6 +1,22 @@
+
+:host, html, body { height: 100%; overflow: hidden; }
+
+.page {
+  --header-h: 64px;
+  --footer-h: 72px;
+  display: grid;
+  grid-template-rows: var(--header-h) 1fr var(--footer-h);
+  height: 100vh;
+  overflow: hidden;
+}
+
+.header { min-height: var(--header-h); }
+.footer { min-height: var(--footer-h); }
+
 .main-content {
-    flex: 1; /* Takes remaining space */
-    padding: 16px;
-    overflow: auto; /* Scroll only inside content if needed */
-  }
+  overflow: hidden; 
+  background: #fff url('/box.png') no-repeat center center / contain; 
+ 
+}
+
   

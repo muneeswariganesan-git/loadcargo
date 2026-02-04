@@ -3,16 +3,12 @@ import { defer, delay, map, Observable, of } from 'rxjs';
 import { CargoAnomaliesApiResponse } from '../../shared/models/flight-payload';
 import { FlightPayload, ViewFlightDGSLRequest } from '../../shared/models/dangerous-goods';
 
-
 export interface FlightSearchPayload {
   flightNumbers: [string, string?];
   flightDate: string; // "DD-MMM-YYYY" (e.g., "25-NOV-2025")
   departureStation: string; // e.g., "LHR"
   productCode?: string; // MM/RR/NN/AA (optional for mock)
 }
-
-
-
 
 // src/app/models/airway-bill.model.ts
 export interface AirWayBill {
@@ -58,7 +54,7 @@ export interface ViewFlightCargoLoadRequest {
         OriginStation: string;
       };
       DateTimes: {
-        DateTimeLocal: string; 
+        DateTimeLocal: string;
         DateTimeStatus: 'Scheduled' | string;
         DateTimeType: 'Departure' | string;
       };
@@ -71,44 +67,42 @@ export interface ViewFlightCargoLoadRequest {
   providedIn: 'root',
 })
 export class MockService {
-
-  
- private readonly mockResponse = {
-  ViewFlightCargoLoadResponse: {
-    FlightLoadDetails: {
-      DatedFlightLegLoadDetails: {
-        AirWayBillInformation: [
-          {
-            AirwayBillNumber: '12519922523',
-            BoardPoint: 'JFK',
-            OffPoint: 'LHR',
-            Weight: 8,
-            Pieces: 1,
-            SpecialHandlingCodes: ['XCG', 'XPS'],
-            HazardousContent: false
-          },
-          {
-            AirwayBillNumber: '12519277414',
-            BoardPoint: 'JFK',
-            OffPoint: 'LHR',
-            Weight: 2112,
-            Pieces: 0,
-            HazardousContent: false
-          },
-          {
-            AirwayBillNumber: '12519738633',
-            BoardPoint: 'JFK',
-            OffPoint: 'LHR',
-            Weight: 0.9,
-            Pieces: 1,
-            SpecialHandlingCodes: ['UPR'],
-            HazardousContent: false
-          }
-        ]
-      }
-    }
-  }
-};
+  private readonly mockResponse = {
+    ViewFlightCargoLoadResponse: {
+      FlightLoadDetails: {
+        DatedFlightLegLoadDetails: {
+          AirWayBillInformation: [
+            {
+              AirwayBillNumber: '12519922523',
+              BoardPoint: 'JFK',
+              OffPoint: 'LHR',
+              Weight: 8,
+              Pieces: 1,
+              SpecialHandlingCodes: ['XCG', 'XPS'],
+              HazardousContent: false,
+            },
+            {
+              AirwayBillNumber: '12519277414',
+              BoardPoint: 'JFK',
+              OffPoint: 'LHR',
+              Weight: 2112,
+              Pieces: 0,
+              HazardousContent: false,
+            },
+            {
+              AirwayBillNumber: '12519738633',
+              BoardPoint: 'JFK',
+              OffPoint: 'LHR',
+              Weight: 0.9,
+              Pieces: 1,
+              SpecialHandlingCodes: ['UPR'],
+              HazardousContent: false,
+            },
+          ],
+        },
+      },
+    },
+  };
 
   /** Mock ViewFlightHeaderResponse */
   getFlightHeader(headerPayload: { ViewFlightHeaderRequest: any }): Observable<any> {
@@ -118,11 +112,12 @@ export class MockService {
         CargoFlightHeaderDetails: {
           DatedFlightLeg: {
             OperatorCarrierCode: 'BA',
-            OperationalFlightNumber: headerPayload?.ViewFlightHeaderRequest?.DatedFlightLeg?.OperationalFlightNumber,
+            OperationalFlightNumber:
+              headerPayload?.ViewFlightHeaderRequest?.DatedFlightLeg?.OperationalFlightNumber,
             OriginStation: 'LHR',
             ScheduledDepartureDateLocal: '2025-11-25T08:20:00',
           },
-           AircraftRegistrationCode: 'GVIIS',
+          AircraftRegistrationCode: 'GVIIS',
           AirfliteAircraftSubtype: '77M',
           FMAircraftSubType: 'B777-236IGW',
           StandNumber: '534',
@@ -471,7 +466,6 @@ export class MockService {
                 EstimatedIndicator: 'N',
               },
             },
-           
           ],
           CapacityBreakdown: {
             Commodities: [
@@ -536,7 +530,7 @@ export class MockService {
                 EstimatedPalletCount: 0,
                 EstimatedContainerCount: 0,
               },
-            
+
               {
                 CommodityCode: 'Transit', //T
                 NGRMPalletCount: 0,
@@ -572,42 +566,42 @@ export class MockService {
           },
           AnomalyInformation: [
             {
-            AnomalyCode: '25-AWB-12517598302',
-            AnomalyStatus: 'N',
-            AirWayBillIdentifier: '12517598302',
-            AnomalyPriority: 'Low',
-            AnomalyDescription: 'HazDocs not on LAN',
-            CargoProduct: { CargoProductCode: 'M' },
-            AnomalyTypeDetails: { AnomalyType: 'Airwaybill' },
-          },
-          {
-            AnomalyCode: '25-AWB-12517598302',
-            AnomalyStatus: 'Y',
-            AirWayBillIdentifier: '12517598302',
-            AnomalyPriority: 'High',
-            AnomalyDescription: 'HazDocs not on LAN',
-            CargoProduct: { CargoProductCode: 'X' },
-            AnomalyTypeDetails: { AnomalyType: 'Airwaybill' },
-          },
-          {
-            AnomalyCode: '25-AWB-12517598302',
-            AnomalyStatus: 'Z',
-            AirWayBillIdentifier: '12517598302',
-            AnomalyPriority: 'Medium',
-            AnomalyDescription: 'HazDocs not on LAN',
-            CargoProduct: { CargoProductCode: 'M' },
-            AnomalyTypeDetails: { AnomalyType: 'Airwaybill' },
-          },
-          {
-            AnomalyCode: '25-AWB-12517598302',
-            AnomalyStatus: 'N',
-            AirWayBillIdentifier: '12517598302',
-            AnomalyPriority: 'Low',
-            AnomalyDescription: 'HazDocs not on LAN',
-            CargoProduct: { CargoProductCode: 'M' },
-            AnomalyTypeDetails: { AnomalyType: 'Airwaybill' },
-          }
-        ],
+              AnomalyCode: '25-AWB-12517598302',
+              AnomalyStatus: 'N',
+              AirWayBillIdentifier: '12517598302',
+              AnomalyPriority: 'Low',
+              AnomalyDescription: 'HazDocs not on LAN',
+              CargoProduct: { CargoProductCode: 'M' },
+              AnomalyTypeDetails: { AnomalyType: 'Airwaybill' },
+            },
+            {
+              AnomalyCode: '25-AWB-12517598302',
+              AnomalyStatus: 'Y',
+              AirWayBillIdentifier: '12517598302',
+              AnomalyPriority: 'High',
+              AnomalyDescription: 'HazDocs not on LAN',
+              CargoProduct: { CargoProductCode: 'X' },
+              AnomalyTypeDetails: { AnomalyType: 'Airwaybill' },
+            },
+            {
+              AnomalyCode: '25-AWB-12517598302',
+              AnomalyStatus: 'Z',
+              AirWayBillIdentifier: '12517598302',
+              AnomalyPriority: 'Medium',
+              AnomalyDescription: 'HazDocs not on LAN',
+              CargoProduct: { CargoProductCode: 'M' },
+              AnomalyTypeDetails: { AnomalyType: 'Airwaybill' },
+            },
+            {
+              AnomalyCode: '25-AWB-12517598302',
+              AnomalyStatus: 'N',
+              AirWayBillIdentifier: '12517598302',
+              AnomalyPriority: 'Low',
+              AnomalyDescription: 'HazDocs not on LAN',
+              CargoProduct: { CargoProductCode: 'M' },
+              AnomalyTypeDetails: { AnomalyType: 'Airwaybill' },
+            },
+          ],
         },
       },
     };
@@ -778,14 +772,10 @@ export class MockService {
     return of(response);
   }
 
-  
-
-  fetchAirWayBillsWithMock(
-    _payload: ViewFlightCargoLoadRequest
-  ): Observable<AirWayBill[]> {
+  fetchAirWayBillsWithMock(_payload: ViewFlightCargoLoadRequest): Observable<AirWayBill[]> {
     const raw =
-      this.mockResponse?.ViewFlightCargoLoadResponse?.FlightLoadDetails
-        ?.DatedFlightLegLoadDetails?.AirWayBillInformation ?? [];
+      this.mockResponse?.ViewFlightCargoLoadResponse?.FlightLoadDetails?.DatedFlightLegLoadDetails
+        ?.AirWayBillInformation ?? [];
 
     return of(raw).pipe(
       delay(300),
@@ -797,185 +787,181 @@ export class MockService {
           Weight: Number(it.Weight ?? 0),
           Pieces: Number(it.Pieces ?? 0),
           SpecialHandlingCodes: it.SpecialHandlingCodes ?? [],
-          HazardousContent: !!it.HazardousContent
+          HazardousContent: !!it.HazardousContent,
         }))
       )
     );
   }
 
-  
-// mock-service.ts
-getDeadloadSummary(payload: any) {
-
-  const deadloadResponse = {
-    "ViewFlightSummaryResponse": {
-      "Errors": {
-        "SIPError": [
-          {
-            "Code": "FWB30002",
-            "SupplementaryInformation": {
-              "FreeText": "Rejected due to Flight not found",
-              "TextSubjectQualifier": "1",
-              "Language": "EN",
-              "Source": "S",
-              "Encoding": "2"
+  // mock-service.ts
+  getDeadloadSummary(payload: any) {
+    const deadloadResponse = {
+      ViewFlightSummaryResponse: {
+        Errors: {
+          SIPError: [
+            {
+              Code: 'FWB30002',
+              SupplementaryInformation: {
+                FreeText: 'Rejected due to Flight not found',
+                TextSubjectQualifier: '1',
+                Language: 'EN',
+                Source: 'S',
+                Encoding: '2',
+              },
+              UUID: 'dd9e5e0c-78a6-44c5-880c-807009180b67',
+              TimeStamp: '2025-12-15T11:18:33',
             },
-            "UUID": "dd9e5e0c-78a6-44c5-880c-807009180b67",
-            "TimeStamp": "2025-12-15T11:18:33"
-          },
-          {
-            "Code": "FWB30002",
-            "SupplementaryInformation": {
-              "FreeText": "Flight image request rejected. Flight not found.",
-              "TextSubjectQualifier": "1",
-              "Language": "EN",
-              "Source": "S",
-              "Encoding": "2"
+            {
+              Code: 'FWB30002',
+              SupplementaryInformation: {
+                FreeText: 'Flight image request rejected. Flight not found.',
+                TextSubjectQualifier: '1',
+                Language: 'EN',
+                Source: 'S',
+                Encoding: '2',
+              },
+              UUID: '03012ebe-0dca-4348-84b3-5d3cfe3f2a98',
+              TimeStamp: '2025-12-15T11:18:33',
             },
-            "UUID": "03012ebe-0dca-4348-84b3-5d3cfe3f2a98",
-            "TimeStamp": "2025-12-15T11:18:33"
-          }
-        ]
-      },
-      "CargoFlightSummaryDetails": {
-        "DatedFlightLeg": {
-          "OperationalFlightNumber": 117,
-          "OperatingCarrierCode": "BA",
-          "DestinationStation": "JFK",
-          "OriginStation": "LHR",
-          "ScheduledDepartureDateLocal": "2025-12-03T08:20:00",
-          "DateTimes": {
-            "DateTimeLocal": "2025-12-03T08:20:00",
-            "DateTimeStatus": "Scheduled",
-            "DateTimeType": "Departure"
-          }
+          ],
         },
-        "LoadItems": [
-          {
-            "LoadType": "BLK",
-            "CLIPALoadIdentifier": 514533936,
-            "OffpointStation": "JFK",
-            "SentToFMIndicator": true,
-            "CustomerAllotmentCode": "VAL",
-            "Deadload": {
-              "CLIPADeadloadIdentifier": 510729492,
-              "DGSLCount": 1,
-              "CommodityCode": "C",
-              "NetWeight": 1,
-              "EstimatedIndicator": "N"
-            }
+        CargoFlightSummaryDetails: {
+          DatedFlightLeg: {
+            OperationalFlightNumber: 117,
+            OperatingCarrierCode: 'BA',
+            DestinationStation: 'JFK',
+            OriginStation: 'LHR',
+            ScheduledDepartureDateLocal: '2025-12-03T08:20:00',
+            DateTimes: {
+              DateTimeLocal: '2025-12-03T08:20:00',
+              DateTimeStatus: 'Scheduled',
+              DateTimeType: 'Departure',
+            },
           },
-          {
-            "LoadType": "BLK",
-            "CLIPALoadIdentifier": 514533943,
-            "OffpointStation": "JFK",
-            "SentToFMIndicator": false,
-            "Deadload": {
-              "CLIPADeadloadIdentifier": 510729499,
-              "DGSLCount": 0,
-              "CommodityCode": "C",
-              "NetWeight": 0,
-              "EstimatedIndicator": "Y"
-            }
-          },
-          {
-            "LoadType": "ULD",
-            "CLIPALoadIdentifier": 514533928,
-            "UnitType": "PMC",
-            "SerialNumber": 21484,
-            "OwnerCode": "IB",
-            "OffpointStation": "JFK",
-            "GrossWeight": 2550,
-            "TareWeight": 122,
-            "Priority": 2,
-            "CargoAgentComment": "PLANNED",
-            "ConfirmationStatus": true,
-            "SentToFMIndicator": true,
-            "BA80DeleteIndicator": false,
-            "AnomalyIndicator": false,
-            "Deadload": {
-              "CLIPADeadloadIdentifier": 510729484,
-              "DGSLCount": 1,
-              "CommodityCode": "C",
-              "NetWeight": 2428,
-              "EstimatedIndicator": "N"
-            }
-          },
-          {
-            "LoadType": "ULD",
-            "CLIPALoadIdentifier": 514533937,
-            "UnitType": "PAJ",
-            "SerialNumber": "03736",
-            "OwnerCode": "IB",
-            "OffpointStation": "JFK",
-            "GrossWeight": 430,
-            "TareWeight": 120,
-            "Priority": 3,
-            "CargoAgentComment": "PLANNED",
-            "ConfirmationStatus": true,
-            "SentToFMIndicator": true,
-            "BA80DeleteIndicator": false,
-            "AnomalyIndicator": false,
-            "Deadload": {
-              "CLIPADeadloadIdentifier": 510729493,
-              "DGSLCount": 0,
-              "CommodityCode": "C",
-              "NetWeight": 310,
-              "EstimatedIndicator": "N"
-            }
-          },
-          {
-            "LoadType": "ULD",
-            "CLIPALoadIdentifier": 514554003,
-            "UnitType": "AKE",
-            "SerialNumber": 12200,
-            "OwnerCode": "BA",
-            "OffpointStation": "JFK",
-            "GrossWeight": 585,
-            "TareWeight": 86,
-            "Priority": 2,
-            "CargoAgentComment": "PLANNED",
-            "ConfirmationStatus": true,
-            "SentToFMIndicator": true,
-            "BA80DeleteIndicator": false,
-            "AnomalyIndicator": true,
-            "Deadload": {
-              "CLIPADeadloadIdentifier": 510749559,
-              "DGSLCount": 0,
-              "CommodityCode": "C",
-              "NetWeight": 499,
-              "EstimatedIndicator": "N"
-            }
-          },
-          {
-            "LoadType": "ULD",
-            "CLIPALoadIdentifier": 514554004,
-            "UnitType": "AKE",
-            "SerialNumber": 18103,
-            "OwnerCode": "BA",
-            "OffpointStation": "JFK",
-            "GrossWeight": 325,
-            "TareWeight": 70,
-            "Priority": 3,
-            "CargoAgentComment": "PLANNED",
-            "ConfirmationStatus": true,
-            "SentToFMIndicator": true,
-            "BA80DeleteIndicator": false,
-            "AnomalyIndicator": true,
-            "Deadload": {
-              "CLIPADeadloadIdentifier": 510749560,
-              "DGSLCount": 0,
-              "CommodityCode": "C",
-              "NetWeight": 255,
-              "EstimatedIndicator": "N"
-            }
-          }
-        ]
-      }
-    }
+          LoadItems: [
+            {
+              LoadType: 'BLK',
+              CLIPALoadIdentifier: 514533936,
+              OffpointStation: 'JFK',
+              SentToFMIndicator: true,
+              CustomerAllotmentCode: 'VAL',
+              Deadload: {
+                CLIPADeadloadIdentifier: 510729492,
+                DGSLCount: 1,
+                CommodityCode: 'C',
+                NetWeight: 1,
+                EstimatedIndicator: 'N',
+              },
+            },
+            {
+              LoadType: 'BLK',
+              CLIPALoadIdentifier: 514533943,
+              OffpointStation: 'JFK',
+              SentToFMIndicator: false,
+              Deadload: {
+                CLIPADeadloadIdentifier: 510729499,
+                DGSLCount: 0,
+                CommodityCode: 'C',
+                NetWeight: 0,
+                EstimatedIndicator: 'Y',
+              },
+            },
+            {
+              LoadType: 'ULD',
+              CLIPALoadIdentifier: 514533928,
+              UnitType: 'PMC',
+              SerialNumber: 21484,
+              OwnerCode: 'IB',
+              OffpointStation: 'JFK',
+              GrossWeight: 2550,
+              TareWeight: 122,
+              Priority: 2,
+              CargoAgentComment: 'PLANNED',
+              ConfirmationStatus: true,
+              SentToFMIndicator: true,
+              BA80DeleteIndicator: false,
+              AnomalyIndicator: false,
+              Deadload: {
+                CLIPADeadloadIdentifier: 510729484,
+                DGSLCount: 1,
+                CommodityCode: 'C',
+                NetWeight: 2428,
+                EstimatedIndicator: 'N',
+              },
+            },
+            {
+              LoadType: 'ULD',
+              CLIPALoadIdentifier: 514533937,
+              UnitType: 'PAJ',
+              SerialNumber: '03736',
+              OwnerCode: 'IB',
+              OffpointStation: 'JFK',
+              GrossWeight: 430,
+              TareWeight: 120,
+              Priority: 3,
+              CargoAgentComment: 'PLANNED',
+              ConfirmationStatus: true,
+              SentToFMIndicator: true,
+              BA80DeleteIndicator: false,
+              AnomalyIndicator: false,
+              Deadload: {
+                CLIPADeadloadIdentifier: 510729493,
+                DGSLCount: 0,
+                CommodityCode: 'C',
+                NetWeight: 310,
+                EstimatedIndicator: 'N',
+              },
+            },
+            {
+              LoadType: 'ULD',
+              CLIPALoadIdentifier: 514554003,
+              UnitType: 'AKE',
+              SerialNumber: 12200,
+              OwnerCode: 'BA',
+              OffpointStation: 'JFK',
+              GrossWeight: 585,
+              TareWeight: 86,
+              Priority: 2,
+              CargoAgentComment: 'PLANNED',
+              ConfirmationStatus: true,
+              SentToFMIndicator: true,
+              BA80DeleteIndicator: false,
+              AnomalyIndicator: true,
+              Deadload: {
+                CLIPADeadloadIdentifier: 510749559,
+                DGSLCount: 0,
+                CommodityCode: 'C',
+                NetWeight: 499,
+                EstimatedIndicator: 'N',
+              },
+            },
+            {
+              LoadType: 'ULD',
+              CLIPALoadIdentifier: 514554004,
+              UnitType: 'AKE',
+              SerialNumber: 18103,
+              OwnerCode: 'BA',
+              OffpointStation: 'JFK',
+              GrossWeight: 325,
+              TareWeight: 70,
+              Priority: 3,
+              CargoAgentComment: 'PLANNED',
+              ConfirmationStatus: true,
+              SentToFMIndicator: true,
+              BA80DeleteIndicator: false,
+              AnomalyIndicator: true,
+              Deadload: {
+                CLIPADeadloadIdentifier: 510749560,
+                DGSLCount: 0,
+                CommodityCode: 'C',
+                NetWeight: 255,
+                EstimatedIndicator: 'N',
+              },
+            },
+          ],
+        },
+      },
+    };
+    return of(deadloadResponse);
   }
-  return of(deadloadResponse);
-}
-
-
 }
