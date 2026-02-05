@@ -39,7 +39,12 @@
           </div>
 
           <!-- RIGHT SECTION — SINGLE LEG -->
-          <div class="right-section single" *ngIf="!cargoFlightHeaderData.isMultiLeg">
+          <div
+            class="right-section single"
+            *ngIf="
+              !cargoFlightHeaderData?.isMultiLeg && (cargoFlightHeaderData?.legs?.length ?? 0) > 0
+            "
+          >
             <div class="value icao org">{{ cargoFlightHeaderData.legs[0]?.origin }}</div>
             <div class="item std">
               <span class="label">STD</span>
@@ -57,7 +62,12 @@
           </div>
 
           <!-- RIGHT SECTION — MULTI LEG -->
-          <div class="right-section multi" *ngIf="cargoFlightHeaderData.isMultiLeg">
+          <div
+            class="right-section multi"
+            *ngIf="
+              cargoFlightHeaderData?.isMultiLeg && (cargoFlightHeaderData?.legs?.length ?? 0) > 1
+            "
+          >
             <div class="value icao org">{{ cargoFlightHeaderData.legs[0]?.origin }}</div>
             <div class="item std1">
               <span class="label">STD</span>
@@ -93,14 +103,13 @@
       </div>
     </div>
 
-   
     <div class="bottom-row">
       <div class="group">
         <span class="label">Flight Status</span>
         <span class="val">{{ cargoFlightHeaderData.generalStatus }}</span>
         <span class="val">{{ cargoFlightHeaderData.loadControlStatus }}</span>
       </div>
-     
+
       <!-- <div class="group">
         <span class="label">Optima RM Active</span>
         <span class="valv">N</span>
@@ -121,11 +130,15 @@
       </div> -->
       <div class="group">
         <span class="labelc">Cargo Release</span>
-      
+
         <span
           class="valc"
           [ngClass]="cargoReleaseDisplay.status"
-          [title]="cargoReleaseDisplay.cutoff ? ('Cut-off ' + (cargoReleaseDisplay.cutoff | date:'HH:mm')) : ''"
+          [title]="
+            cargoReleaseDisplay.cutoff
+              ? 'Cut-off ' + (cargoReleaseDisplay.cutoff | date : 'HH:mm')
+              : ''
+          "
           aria-label="Cargo release status"
         >
           {{ cargoReleaseDisplay.text }}
