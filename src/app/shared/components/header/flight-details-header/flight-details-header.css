@@ -16,61 +16,35 @@
   border-bottom: 2px solid #0b2341;
   isolation: isolate;
 }
+
 .flight-header * {
   box-sizing: border-box;
 }
 
 .cr-done {
-  color: #0a7c2a;      
+  color: #0a7c2a;
   font-weight: 700;
 }
-
-
 .cr-ok {
-   color: #b91c1c; 
-     
+  color: #b91c1c;
 }
-
-
 .cr-overdue {
-  color: #6b7280;  
-       
+  color: #6b7280;
   font-weight: 700;
 }
-
-
 .cr-na {
-  color: #9ca3af;       
-}
-
-.flight-header .label,
-.flight-header .value,
-.flight-header .icao,
-.flight-header .val,
-.flight-header .optima-value {
-  line-height: 1;
-}
-
-.flight-header .value.time,
-.flight-header .icao,
-.flight-header .val,
-.flight-header .optima-value {
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: 'tnum' 1;
-}
-.flight-header .icao {
-  letter-spacing: 0.5px;
+  color: #9ca3af;
 }
 
 .flight-header-viewport {
   width: 100%;
-  overflow-x: hidden;
+  overflow-x: auto;
   overflow-y: hidden;
   background: #fff;
 }
 
 .flight-header .top-row {
-  display: grid !important;
+  display: grid;
   grid-template-columns: max-content max-content;
   column-gap: var(--gap-col);
   align-items: start;
@@ -81,13 +55,10 @@
 }
 
 .flight-header .left-section {
-  display: grid !important;
+  display: grid;
   grid-template-columns: repeat(3, minmax(var(--left-cell-min), max-content));
   grid-auto-rows: min-content;
-
-  column-gap: 0;
   min-width: max-content;
-  overflow: clip;
 }
 
 .flight-header .item {
@@ -95,17 +66,19 @@
   align-items: baseline;
   min-width: max-content;
 }
+
 .flight-header .item .label {
   font-weight: bold;
-  margin-right: 6px !important;
+  margin-right: 6px;
   min-width: 70px;
 }
+
 .flight-header .item .value {
   white-space: nowrap;
 }
 
 .flight-header .right-section {
-  display: grid !important;
+  display: grid;
   border-left: 1px solid #000;
   padding-left: 20px;
   column-gap: var(--gap-right-col);
@@ -113,9 +86,7 @@
   align-items: start;
   justify-items: start;
   white-space: nowrap;
-
   min-width: max-content;
-  overflow: clip;
   background: #fff;
   position: relative;
   z-index: 1;
@@ -125,15 +96,15 @@
   display: inline-flex;
   align-items: baseline;
 }
+
 .flight-header .right-section .item .label {
   font-weight: bold;
   width: var(--std-label);
   min-width: var(--std-label);
-  margin-right: 6px !important;
+  margin-right: 6px;
 }
-.flight-header .right-section .value {
-  white-space: nowrap;
-}
+
+
 
 .flight-header .right-section.single {
   grid-template-columns:
@@ -229,16 +200,20 @@
   gap: 45px;
   white-space: nowrap;
 }
+
 .flight-header .bottom-row .group {
   display: inline-flex;
   white-space: nowrap;
 }
+
 .flight-header .bottom-row .group .label {
-  margin-right: 6px !important;
+  margin-right: 6px;
 }
+
 .flight-header .val {
   margin-left: 15px;
 }
+
 .flight-header .bottom-row .notes {
   margin-left: auto;
   text-align: right;
@@ -248,6 +223,7 @@
   .flight-header-viewport {
     overflow-x: hidden;
   }
+
   .labelb {
     margin-left: 60% !important;
   }
@@ -258,10 +234,10 @@
     margin-left: 50%;
   }
   .valc {
-    margin-left: 50%;
+    margin-left: 40%;
   }
   .labelm {
-    margin-left: 96% !important;
+    margin-left: 108% !important;
   }
   .groupo {
     margin-left: 125px;
@@ -269,10 +245,10 @@
   .valm {
     margin-left: 55px;
   }
-
   .valo {
     margin-left: 80px;
   }
+
   .flight-header {
     --gap-col: 225px;
     --right-icao: 22px !important;
@@ -284,7 +260,6 @@
     font-size: 12px;
     background-color: #fff;
     border-bottom: 2px solid #0b2341;
-
     isolation: isolate;
   }
 
@@ -293,10 +268,12 @@
     font-size: 12px;
     margin-top: 3px;
   }
+
   .flight-header .bottom-row .group .valv {
     margin-right: 15% !important;
     margin-left: 50%;
   }
+
   .flight-header .bottom-row {
     display: flex;
     flex-wrap: nowrap;
@@ -314,6 +291,7 @@
     margin-left: 15px;
     margin-top: 2px;
   }
+
   .flight-header .item .label {
     font-weight: bold;
     margin-right: 6px !important;
@@ -325,6 +303,7 @@
   .flight-header-viewport {
     overflow-x: hidden;
   }
+
   .labelb {
     margin-left: 10% !important;
   }
@@ -344,48 +323,28 @@
     margin-left: 62%;
   }
 
-.valc {
-  font-size: 14px;
-  font-weight: 600;
-  padding: 2px 6px;
-  border-radius: 4px;
-}
+  .valc {
+    font-size: 14px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
 
-
-.cr-done {
-  color: #0a7c2a;      
-  font-weight: 700;
-}
-
-
-.cr-ok {
-   color: #b91c1c; 
-     
-}
-
-
-.cr-overdue {
-  color: #6b7280;  
-       
-  font-weight: 700;
-}
-
-
-.cr-na {
-  color: #9ca3af;       
-}
   .valo {
     margin-left: 80px;
   }
+
   .flight-header .bottom-row .group .label {
     margin-right: 5px !important;
     font-size: 16px;
     margin-top: 3px;
   }
+
   .flight-header .bottom-row .group .valv {
     margin-right: 15% !important;
     margin-left: 15%;
   }
+
   .flight-header .bottom-row {
     display: flex;
     flex-wrap: nowrap;
@@ -403,15 +362,16 @@
     margin-left: 8px;
     margin-top: 2px;
   }
+
   .flight-header .item .label {
     font-weight: bold;
     margin-right: 6px !important;
     min-width: 60px;
   }
+
   .flight-header {
     --pad-x: 15px;
     --gap-col: 323px;
-   
     --right-icao: 60px !important;
     --right-min: 120px !important;
     --right-max: 125px !important;
@@ -423,8 +383,8 @@
     border-bottom: 2px solid #0b2341;
     isolation: isolate;
   }
+
   .flight-header .item .values {
-   
     margin-left: 12% !important;
   }
 
@@ -434,10 +394,4 @@
   .flight-header .bottom-row .group .valv {
     margin-right: 70% !important;
   }
-}
-
-.flight-header .top-row.d-flex,
-.flight-header .left-section.d-flex,
-.flight-header .right-section.d-flex {
-  display: grid !important;
 }

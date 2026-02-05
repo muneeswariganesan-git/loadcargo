@@ -1,0 +1,16 @@
+/* Keep styles minimal to preserve Material look */
+table {
+    width: 100%;
+  }
+  
+  mat-dialog-content {
+    max-height: 60vh; /* Material will scroll this area if content grows */
+  }
+  
+  th[mat-header-cell] {
+    font-weight: 600;
+  }
+  
+  td[mat-cell], th[mat-header-cell] {
+    white-space: nowrap; /* keep HHmm+N compact like in your header */
+  }

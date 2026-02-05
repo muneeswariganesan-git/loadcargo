@@ -1,0 +1,43 @@
+<h2 mat-dialog-title>Flight Leg Details</h2>
+
+<mat-dialog-content>
+  <table mat-table [dataSource]="rows" class="mat-elevation-z1">
+
+    <!-- Origin -->
+    <ng-container matColumnDef="origin">
+      <th mat-header-cell *matHeaderCellDef> Origin </th>
+      <td mat-cell *matCellDef="let r"> {{ r.origin }} </td>
+    </ng-container>
+
+    <!-- STD -->
+    <ng-container matColumnDef="std">
+      <th mat-header-cell *matHeaderCellDef> STD </th>
+      <td mat-cell *matCellDef="let r"> {{ r.std }} </td>
+    </ng-container>
+
+    <!-- ETD -->
+    <ng-container matColumnDef="etd">
+      <th mat-header-cell *matHeaderCellDef> ETD </th>
+      <td mat-cell *matCellDef="let r"> {{ r.etd }} </td>
+    </ng-container>
+
+    <!-- Destination -->
+    <ng-container matColumnDef="destination">
+      <th mat-header-cell *matHeaderCellDef> Destination </th>
+      <td mat-cell *matCellDef="let r"> {{ r.destination }} </td>
+    </ng-container>
+
+    <!-- STA -->
+    <ng-container matColumnDef="sta">
+      <th mat-header-cell *matHeaderCellDef> STA </th>
+      <td mat-cell *matCellDef="let r"> {{ r.sta }} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row        *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-primary-button color="primary" (click)="close()">Close</button>
+</mat-dialog-actions>

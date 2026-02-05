@@ -4,6 +4,8 @@ import { filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ProductService } from '../../../services/product-service';
 import { FlightDetails, FlightHeaderViewModel } from '../../../models/cargo-flight-header-model';
+import { MatDialog } from '@angular/material/dialog';
+import { FlightLegDetailsDialog, FlightLegRow } from '../../../../utilities/components/flight-leg-details-dialog/flight-leg-details-dialog';
 
 type LegVM = {
   origin?: string;
@@ -57,8 +59,8 @@ export class FlightDetailsHeader {
 
   private readonly destroyRef = inject(DestroyRef);
   cargoFlightHeaderData!: HeaderVM;
-
-  constructor(private headerState: ProductService) {}
+  private rawFlightData!: FlightDetails;
+  constructor(private headerState: ProductService,private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.headerState.flightData$
@@ -67,6 +69,7 @@ export class FlightDetailsHeader {
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((data) => {
+        this.rawFlightData = data;
         this.cargoFlightHeaderData = this.mapHeaderData(data);
 
         this.cargoReleaseDisplay = this.computeCargoReleaseDisplay(data);
@@ -79,8 +82,56 @@ export class FlightDetailsHeader {
   }
 
   onMore(): void {
+    const rows = this.buildLegRowsForDialog(this.rawFlightData);
+       this.dialog.open(FlightLegDetailsDialog, {
+         width: '540px',
+         panelClass: 'flight-leg-details-panel', // hook for flat style
+         autoFocus: true,
+         restoreFocus: true,
+         data: rows,
+       });
     console.log('More legs clicked');
   }
+  
+ private buildLegRowsForDialog(header: FlightDetails): FlightLegRow[] {
+  const legs = header.flightLeg ?? [];
+
+  const pickTimes = (leg: any) => {
+    const dt = Array.isArray(leg?.dateTimes) ? leg.dateTimes : [];
+    const depScheduled = dt.find((d: any) => d.dateTimeType === 'Departure' && d.dateTimeStatus === 'Scheduled');
+    const depEstimated = dt.find((d: any) => d.dateTimeType === 'Departure' && d.dateTimeStatus === 'Estimated');
+    const arrEstimated = dt.find((d: any) => d.dateTimeType === 'Arrival' && d.dateTimeStatus === 'Estimated');
+    const arrScheduled = dt.find((d: any) => d.dateTimeType === 'Arrival' && d.dateTimeStatus === 'Scheduled');
+
+    const stdLocal = depScheduled?.dateTimeLocal ?? depEstimated?.dateTimeLocal; // prefer Scheduled
+    const etdLocal = depEstimated?.dateTimeLocal ?? undefined;                  // ETD only if Estimated
+    const staLocal = arrEstimated?.dateTimeLocal ?? arrScheduled?.dateTimeLocal;// STA prefer Estimated
+    return { stdLocal, etdLocal, staLocal };
+  };
+
+  // Journey base for +n against the very first STD (or header’s scheduled STD)
+  const firstTimes = pickTimes(legs[0]);
+  const journeyBase =
+    firstTimes.stdLocal ??
+    header?.datedFlightLeg?.scheduledDepartureDateLocal ??
+    legs[0]?.dateTimes?.[0]?.dateTimeLocal;
+
+  const rows: FlightLegRow[] = [];
+
+  for (const leg of legs) {
+    const { stdLocal, etdLocal, staLocal } = pickTimes(leg);
+    rows.push({
+      origin: leg?.flightLegOrigin ?? header?.datedFlightLeg?.originStation ?? '',
+      destination: leg?.flightLegDestination ?? header?.datedFlightLeg?.destinationStation ?? '',
+      std: this.formatTimeWithShift(stdLocal, journeyBase),
+      etd: etdLocal ? this.formatTimeWithShift(etdLocal, journeyBase) : '',
+      sta: this.formatArrivalPlus(staLocal, stdLocal),
+    });
+  }
+
+  return rows;
+}
+
   private computeBuildCloseDisplay(header: FlightDetails): BuildCloseDisplay {
     // 1) Get STD (Scheduled Departure)
     const firstLeg = header.flightLeg?.[0];
@@ -100,11 +151,9 @@ export class FlightDetailsHeader {
     const std = new Date(depSTDStr);
     const bc = new Date(bcStr);
 
-   
     const diffMs = std.getTime() - bc.getTime();
     const diffHours = diffMs / (1000 * 60 * 60);
 
-  
     if (diffHours > 18) {
       return { text: 'Y', diffHours };
     } else {

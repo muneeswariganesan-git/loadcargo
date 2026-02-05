@@ -8,7 +8,11 @@ import { DeadloadDialog } from '../../../../shared/components/footer/cargo-keypa
 import { ViewOwnership } from '../../../../shared/components/footer/cargo-keypad-footer/view-ownership/view-ownership';
 import { FlightList } from '../../../../shared/components/footer/cargo-keypad-footer/flight-list/flight-list';
 import { getProductCode } from '../../../../shared/models/product-mapping';
-import { buildCargoFlightHeaderRequest, buildHeaderPayload, buildPayload } from '../../../../shared/services/payload-factory';
+import {
+  buildCargoFlightHeaderRequest,
+  buildHeaderPayload,
+  buildPayload,
+} from '../../../../shared/services/payload-factory';
 import { FlightListService } from '../../../../shared/services/flight-list-service';
 import { WelcomeHeader } from '../../../../shared/components/header/welcome-header/welcome-header';
 import { FlightDetailsHeader } from '../../../../shared/components/header/flight-details-header/flight-details-header';
@@ -127,90 +131,50 @@ export class ProductLanding {
   }
 
   private fetchFlightDetails(basePayload: any) {
-    
- const searchPayload = this.searchPayloadService.get();
- if (!searchPayload) return;
+    const searchPayload = this.searchPayloadService.get();
+    if (!searchPayload) return;
 
-    const cargoFlightHeaderRequest= buildCargoFlightHeaderRequest(searchPayload);
+    const cargoFlightHeaderRequest = buildCargoFlightHeaderRequest(searchPayload);
     const viewInfoPayload: any = buildPayload('viewInfo', basePayload);
 
     console.log('Header Payload:', cargoFlightHeaderRequest);
     console.log('Summary Payload:', viewInfoPayload);
-   
-    this.cargoFlightHeaderService.getFlightHeader(cargoFlightHeaderRequest).subscribe((headerRes:FlightDetails) => {
-      // ---------------------------------------------------------
-      // 1️⃣ Extract the header data safely
-      // ---------------------------------------------------------
-      const raw = headerRes ?? null;
 
-      if (!raw) {
-        console.warn('No header data found in mock response');
-        return;
-      }
+    this.cargoFlightHeaderService
+      .getFlightHeader(cargoFlightHeaderRequest)
+      .subscribe((headerRes: FlightDetails) => {
+        const raw = headerRes ?? null;
 
-      // Clone to avoid mutating observable result
-      const normalized = { ...raw };
-
-      // ---------------------------------------------------------
-      // 2️⃣ Normalize registration and service type
-      // ---------------------------------------------------------
-      const reg = (normalized.aircraftRegistrationCode ?? '').trim();
-      const service = (normalized.iataServiceType ?? '').trim().toUpperCase();
-
-      if (!reg) {
-        if (service === 'F') {
-          normalized.aircraftRegistrationCode = 'Freighters';
-        } else if (service === 'V') {
-          normalized.aircraftRegistrationCode = 'Truck';
+        if (!raw) {
+          console.warn('No header data found in mock response');
+          return;
         }
-      }
 
-      // ---------------------------------------------------------
-      // 3️⃣ Update component + state service
-      // ---------------------------------------------------------
-      this.flightHeader = normalized;
+        const normalized = { ...raw };
 
-      // Store for global/state access
-      this.searchPayloadService.setFlightData(normalized);
+        const reg = (normalized.aircraftRegistrationCode ?? '').trim();
+        const service = (normalized.iataServiceType ?? '').trim().toUpperCase();
 
-      // Optional navigation logic
-      this.searchPayloadService.setHeader('details');
-      this.headerType = 'details';
+        if (!reg) {
+          if (service === 'F') {
+            normalized.aircraftRegistrationCode = 'Freighters';
+          } else if (service === 'V') {
+            normalized.aircraftRegistrationCode = 'Truck';
+          }
+        }
 
-      // ---------------------------------------------------------
-      // 4️⃣ Debug output
-      // ---------------------------------------------------------
-      console.log('Normalized Header (mock):', {
-        AircraftRegistrationCode: normalized.aircraftRegistrationCode,
-        IATAServiceType: normalized.iataServiceType,
+        this.flightHeader = normalized;
+
+        this.searchPayloadService.setFlightData(normalized);
+
+        this.searchPayloadService.setHeader('details');
+        this.headerType = 'details';
+
+        console.log('Normalized Header (mock):', {
+          AircraftRegistrationCode: normalized.aircraftRegistrationCode,
+          IATAServiceType: normalized.iataServiceType,
+        });
       });
-    });
-
-    // this.mockService.getFlightHeader(headerPayload).subscribe((headerRes) => {
-    //   const raw = headerRes?.ViewFlightHeaderResponse?.CargoFlightHeaderDetails ?? null;
-
-    //   const normalized = { ...raw };
-    //   const reg = (normalized?.AircraftRegistrationCode ?? '').trim();
-    //   const service = (normalized?.IATAServiceType ?? '').trim().toUpperCase();
-
-    //   if (!reg) {
-    //     if (service === 'F') {
-    //       normalized.AircraftRegistrationCode = 'Freighters';
-    //     } else if (service === 'V') {
-    //       normalized.AircraftRegistrationCode = 'Truck';
-    //     }
-    //   }
-
-    //   this.flightHeader = normalized;
-    //   this.searchPayloadService.setFlightData(this.flightHeader);
-    //   this.searchPayloadService.setHeader('details');
-    //   this.headerType = 'details';
-
-    //   console.log('Normalized Header:', {
-    //     AircraftRegistrationCode: this.flightHeader?.AircraftRegistrationCode,
-    //     IATAServiceType: this.flightHeader?.IATAServiceType,
-    //   });
-    // });
 
     this.mockService.getFlightSummary(viewInfoPayload).subscribe((summaryRes) => {
       const details = summaryRes?.ViewFlightSummaryResponse?.CargoFlightSummaryDetails ?? {};
